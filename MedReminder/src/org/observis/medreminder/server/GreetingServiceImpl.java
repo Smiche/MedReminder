@@ -3,7 +3,6 @@ package org.observis.medreminder.server;
 import org.observis.medreminder.client.GreetingService;
 import org.observis.medreminder.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 /**
  * The server-side implementation of the RPC service.
  */
