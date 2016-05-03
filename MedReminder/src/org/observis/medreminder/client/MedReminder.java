@@ -54,11 +54,13 @@ public class MedReminder implements EntryPoint {
 	private List<String> patients = Arrays.asList("Patient1","Patient2","Patient3","Patient4","etc...");
 	HorizontalPanel holder = new HorizontalPanel();
 	VerticalPanel individualPanel = new VerticalPanel();
+	Button addSchedule = new Button("add");
 	/**
 	 * Updating the patient panel
 	 * Args Patient name
 	 */
 	private void addSchedule(){
+		individualPanel.remove(individualPanel.getWidgetCount()-1);
 		TextBox hour = new TextBox();
 		hour.setWidth("15px");
 		hour.setText("00");
@@ -79,7 +81,10 @@ public class MedReminder implements EntryPoint {
 		timePanel.add(deli);
 		timePanel.add(minute);	
 		
+		
 		individualPanel.add(timePanel);
+		individualPanel.getWidget(individualPanel.getWidgetCount());
+		
 	}
 	
 	private void updateMiddlePanel(String patient){		
@@ -125,7 +130,6 @@ public class MedReminder implements EntryPoint {
 		timePanel.add(deli);
 		timePanel.add(minute);	
 		
-		Button addSchedule = new Button("Add");
 		addSchedule.addClickHandler(new ClickHandler(){
 
 			@Override
@@ -192,8 +196,10 @@ public class MedReminder implements EntryPoint {
 	    cellList.setRowCount(patients.size(), true);
 	    cellList.setRowData(0,patients);
 	    VerticalPanel patientsPanel = new VerticalPanel();
+	    
 	    patientsPanel.add(cellList);
 	    patientsPanel.add(addPatient);
+	    
 	    holder.insert(patientsPanel, 0);	    
 		holder.insert(individualPanel,1);
 		
