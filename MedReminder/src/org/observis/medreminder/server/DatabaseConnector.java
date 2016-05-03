@@ -12,6 +12,7 @@ public class DatabaseConnector {
 	   
 	   public static void main(String[] args) {
 		   Connection conn = null;
+		   Statement stmnt = null;
 		   try{
 		      //STEP 2: Register JDBC driver
 		      Class.forName("com.mysql.jdbc.Driver");
@@ -20,6 +21,9 @@ public class DatabaseConnector {
 		      System.out.println("Connecting to a selected database...");
 		      conn = DriverManager.getConnection(DB_URL, USER, PASS);
 		      System.out.println("Connected database successfully...");
+		      System.out.println("Insert Values");
+		      stmnt = conn.createStatement();
+		      String sql = "INSERT INTO templates" + "VALUES";
 		   }catch(SQLException se){
 		      //Handle errors for JDBC
 		      se.printStackTrace();
