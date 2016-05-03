@@ -4,7 +4,7 @@ import java.sql.*;
 public class DatabaseConnector {
 	// JDBC driver name and database URL
 	   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-	   static final String DB_URL = "jdbc:mysql://http://192.168.8.110//patients";
+	   static final String DB_URL = "jdbc:mysql://http://192.168.8.110:3306//patients";
 
 	   //  Database credentials
 	   static final String USER = "root";
