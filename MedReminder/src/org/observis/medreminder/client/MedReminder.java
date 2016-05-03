@@ -83,7 +83,8 @@ public class MedReminder implements EntryPoint {
 		
 		
 		individualPanel.add(timePanel);
-		individualPanel.getWidget(individualPanel.getWidgetCount());
+		individualPanel.add(addSchedule);
+		//individualPanel.getWidget(individualPanel.getWidgetCount());
 		
 	}
 	
