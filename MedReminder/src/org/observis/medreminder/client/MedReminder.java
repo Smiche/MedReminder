@@ -189,11 +189,11 @@ public class MedReminder implements EntryPoint {
 	        String selected = selectionModel.getSelectedObject();
 	        if (selected != null) {
 	        	updateMiddlePanel(selected);
-	          //Window.alert("You selected: " + selected);
+	          Window.alert("You selected: " + selected);
 	        }
 	      }
 	    });
-	   // Window.alert("Size:"+patients.size());
+	    Window.alert("Size:"+patients.size());
 	    cellList.setRowCount(patients.size(), true);
 	    cellList.setRowData(0,patients);
 	    VerticalPanel patientsPanel = new VerticalPanel();
