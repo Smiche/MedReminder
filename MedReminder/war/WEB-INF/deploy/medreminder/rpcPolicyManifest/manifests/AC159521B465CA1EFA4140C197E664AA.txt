@@ -1,0 +1,2 @@
+serviceClass: org.observis.medreminder.client.LoginService
+path: 3D001BA4E5353805A1CBBECB32E6DFC4.gwt.rpc

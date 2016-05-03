@@ -10,6 +10,10 @@
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>org.observis.medreminder.server.GreetingServiceImpl</servlet-class>
   </servlet>
+    <servlet>
+    <servlet-name>communicationServlet</servlet-name>
+    <servlet-class>org.observis.medreminder.server.CommunicationServiceImpl</servlet-class>
+  </servlet>
   
   <servlet>
     <servlet-name>loginServlet</servlet-name>
@@ -19,6 +23,11 @@
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
     <url-pattern>/medreminder/greet</url-pattern>
+  </servlet-mapping>
+  
+    <servlet-mapping>
+    <servlet-name>communicationServlet</servlet-name>
+    <url-pattern>/medreminder/communication</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>

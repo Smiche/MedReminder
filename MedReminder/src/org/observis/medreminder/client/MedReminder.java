@@ -50,11 +50,13 @@ public class MedReminder implements EntryPoint {
 	 */
 	private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 	private final LoginServiceAsync loginService = GWT.create(LoginService.class);
+	private final CommunicationServiceAsync comService = GWT.create(CommunicationService.class);
 	private boolean loggedIn = false;
 	private List<String> patients = Arrays.asList("Patient1","Patient2","Patient3","Patient4","etc...");
 	HorizontalPanel holder = new HorizontalPanel();
 	VerticalPanel individualPanel = new VerticalPanel();
 	Button addSchedule = new Button("add");
+	Button addPatient = new Button("Add patient");
 	/**
 	 * Updating the patient panel
 	 * Args Patient name
@@ -166,13 +168,25 @@ public class MedReminder implements EntryPoint {
 		individualPanel = new VerticalPanel();
 		TextCell patientsCell = new TextCell();
 		
-		Button addPatient = new Button("Add patient");
 		
 		addPatient.addClickHandler(new ClickHandler(){
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO Auto-generated method stub
+				comService.addPatient("test", "test", new AsyncCallback<String>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("fail!");
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						Window.alert("Success!");
+						
+					}
+					
+				});
 				
 			}
 			
