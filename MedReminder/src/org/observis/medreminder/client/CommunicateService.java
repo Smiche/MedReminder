@@ -8,5 +8,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("communicate")
 public interface CommunicateService extends RemoteService {
-	String greetServer(String name) throws IllegalArgumentException;
+	String addPatient(String name) throws IllegalArgumentException;
 }
