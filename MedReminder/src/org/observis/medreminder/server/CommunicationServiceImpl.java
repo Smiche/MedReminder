@@ -17,7 +17,10 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
         String username = (String) session.getAttribute("user");
 		System.out.println("Username attempint to add:" +username);
 		// TODO Auto-generated method stub
-		return null;
+		
+		//
+		
+		return "Patient added:"+name+phone;
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class DatabaseConnector {
 		      System.out.println("Insert Values");
 		      stmnt = conn.createStatement();
 		      String sql = "INSERT INTO templates " + "VALUES (2, 'SAMPLE TEXT')";
-		      stmnt.executeUpdate(sql);
+		     // stmnt.executeUpdate(sql);
 		      System.out.println("done");
 		   }catch(SQLException se){
 		      //Handle errors for JDBC
@@ -41,7 +41,7 @@ public class DatabaseConnector {
 		         se.printStackTrace();
 		      }//end finally try
 		   }//end try
-		   System.out.println("Goodbye!");
+		   //System.out.println("Goodbye!");
 		}//end main
 
 }

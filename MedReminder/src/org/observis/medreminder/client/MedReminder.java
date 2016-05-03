@@ -57,6 +57,8 @@ public class MedReminder implements EntryPoint {
 	VerticalPanel individualPanel = new VerticalPanel();
 	Button addSchedule = new Button("add");
 	Button addPatient = new Button("Add patient");
+	TextBox phoneBox = new TextBox();
+	TextBox patientNameBox = new TextBox();
 	/**
 	 * Updating the patient panel
 	 * Args Patient name
@@ -87,6 +89,63 @@ public class MedReminder implements EntryPoint {
 		individualPanel.add(timePanel);
 		individualPanel.add(addSchedule);
 		//individualPanel.getWidget(individualPanel.getWidgetCount());
+		
+	}
+	
+	private void addPatientPopup(){
+		// Create the popup dialog box
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.setText("Add a patient.");
+		dialogBox.setAnimationEnabled(true);
+		final Button closeButton = new Button("Close");
+		final Button addClick = new Button("Add");
+		// We can set the id of a widget by accessing its Element
+		closeButton.getElement().setId("closeButton");
+		VerticalPanel dialogVPanel = new VerticalPanel();
+		phoneBox.setText("+358");
+		
+		dialogVPanel.addStyleName("dialogVPanel");
+		dialogVPanel.add(new HTML("<b>*Patient Phone number:</b>"));
+		dialogVPanel.add(phoneBox);
+		dialogVPanel.add(new HTML("Patient name(optional):"));
+		dialogVPanel.add(patientNameBox);
+		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		dialogVPanel.add(addClick);
+		dialogVPanel.add(closeButton);
+		dialogBox.setWidget(dialogVPanel);
+		dialogBox.center();
+		// Add a handler to close the DialogBox
+		closeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				dialogBox.hide();
+				phoneBox.setText("+358");
+				patientNameBox.setText("");
+			}
+		});
+		addClick.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				comService.addPatient(patientNameBox.getText(), phoneBox.getText(), new AsyncCallback<String>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failure");
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						Window.alert(result);
+					
+					}
+					
+				});
+				dialogBox.hide();
+				phoneBox.setText("+358");
+				patientNameBox.setText("");
+			}
+			
+		});
 		
 	}
 	
@@ -170,24 +229,9 @@ public class MedReminder implements EntryPoint {
 		
 		
 		addPatient.addClickHandler(new ClickHandler(){
-
 			@Override
 			public void onClick(ClickEvent event) {
-				comService.addPatient("test", "test", new AsyncCallback<String>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("fail!");
-					}
-
-					@Override
-					public void onSuccess(String result) {
-						Window.alert("Success!");
-						
-					}
-					
-				});
-				
+				 addPatientPopup();
 			}
 			
 		});
