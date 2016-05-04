@@ -133,6 +133,7 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onSuccess(String result) {
+				Window.alert("received templatesList:"+result);
 				templatesListString = result.split(",");
 				
 			}
@@ -240,7 +241,7 @@ public class MedReminder implements EntryPoint {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						String selected = selectionModel.getSelectedObject();
 						if (selected != null) {
-							Window.alert("You selected: " + selected);
+							//Window.alert("You selected: " + selected);
 							updateMiddlePanel(selected);
 							
 						}
@@ -256,6 +257,7 @@ public class MedReminder implements EntryPoint {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void loadTemplate(String templateName) {
 		// interface to get template
 		comService.getTemplate(templateName,new AsyncCallback<String[]>(){
@@ -301,27 +303,25 @@ public class MedReminder implements EntryPoint {
 	}
 
 	private void updateMiddlePanel(String patient) {
-		
-		
-		
+		Window.alert("starting middle panel");
 		// clear panel
 		individualPanel.clear();
 		// new elements
 		Label patientName = new Label();
 		patientName.setText("Patient name: " + patient);
-
+		Window.alert("311");
+		
 		Button saveData = new Button("Save");
 
 		saveData.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				submitTask();
-
 			}
 
 		});
 
+		
 		for (int i = 0; i < 7; i++) {
 			days[i] = new CheckBox();
 		}
@@ -337,6 +337,7 @@ public class MedReminder implements EntryPoint {
 			days[i].setValue(weekArray[i]);
 		}
 
+		Window.alert("339");
 		HorizontalPanel dayPanel = new HorizontalPanel();
 		for (CheckBox box : days) {
 			dayPanel.add(box);
@@ -357,7 +358,9 @@ public class MedReminder implements EntryPoint {
 		minute.setText("00");
 		minute.setMaxLength(2);
 
-		if (dayTime.length == 0) {
+		Window.alert("359");
+		if (dayTime!=null) {
+			Window.alert("362");
 			for (int i = 0; i < dayTime.length; i++) {
 				String[] hourMinute = dayTime[i].split(":");
 				hour.setText("" + hourMinute[0]);
@@ -367,11 +370,12 @@ public class MedReminder implements EntryPoint {
 				timePanel.add(minute);
 			}
 		} else {
+			Window.alert("372");
 			timePanel.add(hour);
 			timePanel.add(deli);
 			timePanel.add(minute);
 		}
-
+		Window.alert("375");
 		// handler to add new time schedules
 		addSchedule.addClickHandler(new ClickHandler() {
 			@Override
@@ -384,10 +388,13 @@ public class MedReminder implements EntryPoint {
 		messageBox.setTitle("Message to Send:");
 		messageBox.setWidth("350px");
 		messageBox.setHeight("250px");
-
+		
+		Window.alert("trying to get templateList");
 		requestTemplateList();
+		
 		for (String t : templatesListString) {
 			templatesList.addItem(t);
+			Window.alert("adding template item:"+t);
 		}
 		templatesList.addChangeHandler(new ChangeHandler() {
 			@Override
@@ -507,7 +514,7 @@ public class MedReminder implements EntryPoint {
 		final Button closeLoginBox = new Button("Close");
 		// We can set the id of a widget by accessing its Element
 		closeLoginBox.getElement().setId("closeLoginBox");
-		final Label loginDetails = new Label();
+		//final Label loginDetails = new Label();
 		final HTML loginResponse = new HTML();
 		VerticalPanel dialogLoginPanel = new VerticalPanel();
 		dialogLoginPanel.addStyleName("dialogVPanel");
