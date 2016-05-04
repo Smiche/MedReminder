@@ -169,7 +169,6 @@ public class MedReminder implements EntryPoint {
 			public void onSuccess(Object result) {
 				String a = (String) result;
 				patientString = a.split(",");
-				
 			}
 			
 		});

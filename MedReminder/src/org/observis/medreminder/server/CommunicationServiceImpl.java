@@ -35,7 +35,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 		
         HttpServletRequest httpServletRequest = this.getThreadLocalRequest();
         HttpSession session = httpServletRequest.getSession(true);
-        String username = (String) session.getAttribute("user");
+        String doctorName = (String) session.getAttribute("user");
         //
         
         //get all patients from doctor id
