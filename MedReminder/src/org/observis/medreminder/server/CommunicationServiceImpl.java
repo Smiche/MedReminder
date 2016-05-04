@@ -18,7 +18,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 		System.out.println("Username attempint to add:" +username);
 		// TODO Auto-generated method stub
 		
-		//
+		//	
 		
 		return "Patient added:"+name+phone;
 	}
@@ -37,10 +37,14 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
         HttpSession session = httpServletRequest.getSession(true);
         String doctorName = (String) session.getAttribute("user");
         //
-        
+        try{
+        	DatabaseConnector.returnPatient("doctorR");
+        } catch(Exception e){
+        	e.printStackTrace();
+        }
         //get all patients from doctor id
 		//
-		return null;
+		return "kkkkk,kkkkk,kk,kkk";
 	}
 	
 

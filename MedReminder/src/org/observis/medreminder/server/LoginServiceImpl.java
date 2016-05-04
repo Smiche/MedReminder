@@ -26,7 +26,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 	        HttpSession session = httpServletRequest.getSession(true);
 	        session.setAttribute("user", username);
 			System.out.println("Successful login.");
-			DatabaseConnector.main(null);
+			
 			return true;
 		} else {
 		return false;
