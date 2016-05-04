@@ -79,6 +79,7 @@ public class MedReminder implements EntryPoint {
 	private String[] dayTime;
 	private String[] patientString;
 	private String[] templateString;
+	private String[] templatesListString;
 	private HorizontalPanel timePanel = new HorizontalPanel();
 
 	MenuBar bar = new MenuBar();
@@ -89,6 +90,7 @@ public class MedReminder implements EntryPoint {
 
 	private void submitTask() {
 		// String text = individualPanel.getWidget(0);
+		
 	}
 
 	private void addSchedule() {
@@ -117,6 +119,25 @@ public class MedReminder implements EntryPoint {
 		individualPanel.add(addSchedule);
 		// individualPanel.getWidget(individualPanel.getWidgetCount());
 
+	}
+	
+
+	@SuppressWarnings("unused")
+	private void requestTemplateList(){
+		comService.getTemplateList(new AsyncCallback<String>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Unable to fetch templateList.");
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				templatesListString = result.split(",");
+				
+			}
+			
+		});
 	}
 
 	private void addPatientPopup() {
@@ -237,9 +258,24 @@ public class MedReminder implements EntryPoint {
 
 	private void loadTemplate(String templateName) {
 		// interface to get template
+		comService.getTemplate(templateName,new AsyncCallback<String[]>(){
 
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Unable to fetch template by name.");
+				
+			}
+
+			@Override
+			public void onSuccess(String[] result) {
+				templateString = result;
+				
+			}
+			
+		});
+		
 		// splitting array
-		String[] result = null;
+		String[] result = templateString;
 		String text = result[0];
 		String[] weekdays = result[1].split(",");
 		dayTime = result[2].split(",");
@@ -265,6 +301,9 @@ public class MedReminder implements EntryPoint {
 	}
 
 	private void updateMiddlePanel(String patient) {
+		
+		
+		
 		// clear panel
 		individualPanel.clear();
 		// new elements
@@ -318,7 +357,7 @@ public class MedReminder implements EntryPoint {
 		minute.setText("00");
 		minute.setMaxLength(2);
 
-		if (dayTime != null) {
+		if (dayTime.length == 0) {
 			for (int i = 0; i < dayTime.length; i++) {
 				String[] hourMinute = dayTime[i].split(":");
 				hour.setText("" + hourMinute[0]);
@@ -346,18 +385,16 @@ public class MedReminder implements EntryPoint {
 		messageBox.setWidth("350px");
 		messageBox.setHeight("250px");
 
-		/*
-		for (String t : templateString) {
+		requestTemplateList();
+		for (String t : templatesListString) {
 			templatesList.addItem(t);
 		}
 		templatesList.addChangeHandler(new ChangeHandler() {
-
 			@Override
 			public void onChange(ChangeEvent event) {
 				loadTemplate(templatesList.getSelectedItemText());
 			}
-
-		}); */
+		}); 
 
 		individualPanel.add(patientName);
 		individualPanel.add(finalDayBox);
