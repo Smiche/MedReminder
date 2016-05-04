@@ -195,17 +195,6 @@ public class MedReminder implements EntryPoint {
 							@Override
 							public void onSuccess(String result) {
 								loadPatients();
-
-								Timer timer = new Timer() {
-									@Override
-									public void run() {
-										initUI();
-										addPatientBox.hide();
-										phoneBox.setText("+358");
-										patientNameBox.setText("");
-									}
-								};
-								timer.schedule(5000);
 							}
 
 						});
@@ -232,6 +221,11 @@ public class MedReminder implements EntryPoint {
 			public void onSuccess(Object result) {
 				String a = (String) result;
 				patientString = a.split(",");
+				initUI();
+				addPatientBox.hide();
+				phoneBox.setText("+358");
+				patientNameBox.setText("");
+
 			}
 		});
 
