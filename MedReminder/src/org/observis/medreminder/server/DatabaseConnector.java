@@ -21,9 +21,9 @@ public class DatabaseConnector {
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// STEP 3: Open a connection
-			System.out.println("Connecting to a selected database...");
+			//System.out.println("Connecting to a selected database...");
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			System.out.println("Connected database successfully...");
+			//System.out.println("Connected database successfully...");
 
 		} catch (SQLException se) {
 			// Handle errors for JDBC
@@ -39,7 +39,7 @@ public class DatabaseConnector {
 		try{
 			if(conn!=null)
 				conn.close();
-			System.out.println("Connection is closed");
+			//System.out.println("Connection is closed");
 		}catch(SQLException se){
 			se.printStackTrace();
 		}
@@ -75,7 +75,7 @@ public class DatabaseConnector {
 					resultString += "," + rs.getString("number");
 				}
 			}
-			System.out.println(resultString);
+			//System.out.println(resultString);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -97,7 +97,7 @@ public class DatabaseConnector {
 			while (rs.next()) {
 				doctorID = rs.getString("doctor_id");
 			}
-			System.out.println(doctorID);
+			//System.out.println(doctorID);
 			String addPatientSQL = "INSERT INTO patients (doctor_id, number) VALUES ('"+doctorID+"','"+phone+"')";
 			//Using the same string variable to execute another SQL statement
 			stmt.execute(addPatientSQL);
@@ -132,7 +132,7 @@ public class DatabaseConnector {
 		}
 		closeConnection();
 		
-		System.out.println(MD5(password)+" "+result);
+		//System.out.println(MD5(password)+" "+result);
 		if (result.equals(MD5(password))){
 			return true;
 		}else{
@@ -153,8 +153,68 @@ public class DatabaseConnector {
 		    return null;
 		}
 
-	//public static String[] addTemplate(String text, String days, String time, String duration){
+	public static void addTemplateRecord(String text, String days, String time, String duration, String description){
+		//inserting a template record to the db
+		openConnection();
+		String sqlQuery ="INSERT INTO templates( `text`, `days`, `time`, `duration`, `template_descr`) VALUES ('"+text+"','"+days+"','"+time+"','"+duration+"','"+description+"')";
+		try {
+			
+			stmt = conn.createStatement();
+		
+			stmt.execute(sqlQuery);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
 		
 		
-	//}
+	}
+	public static String[] getTemplateRecord (String description){
+		openConnection();
+		String sqlQuery ="SELECT ('text','days','time','duration','template_desc' FROM templates WHERE template_description LIKE '"+description+"'";		
+		String[] templateRecord = new String[5];
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			templateRecord[0] = rs.getString("text");
+			templateRecord[1] = rs.getString("days");
+			templateRecord[2] = rs.getString("time");
+			templateRecord[3] = rs.getString("duration");
+			templateRecord[4] = rs.getString("template_desc");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+		return templateRecord;
+		
+	}
+	public static String getTemplatesList(){
+		
+		openConnection();
+		String templateList ="";
+		String sqlQuery = "SELECT template_desc FROM templates";
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			while (rs.next()) {
+				if (templateList.length() < 2) {
+					templateList += rs.getString("template_desc");
+				} else {
+					templateList += "," + rs.getString("template_desc");
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
 }

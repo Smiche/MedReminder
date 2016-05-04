@@ -12,7 +12,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+
 
 	@Override
 	public String addPatient(String name, String phone)
@@ -32,6 +32,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 	// client adding template to server
 	public void addTemplate(String text, String weekDays, String time,String duration, String description)
 			throws IllegalArgumentException {
+		DatabaseConnector.addTemplateRecord(text, weekDays, time, duration, description);
 		// TODO Auto-generated method stub
 		
 	}
@@ -53,6 +54,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 	//client getting template t
 	public String[] getTemplate(String description) throws IllegalArgumentException {
 		String[] template = new String[4];
+		return DatabaseConnector.getTemplateRecord(description);
 		//hook to db connector
 		
 		//return in format:
@@ -61,17 +63,17 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 		//template[2] = "00:00,01:00,02:12,00:12,...."
 		//template[3] = duration
 		//return template;
-		return null;
+		
 	}
 
 	@Override
 	public String getTemplateList() throws IllegalArgumentException {
 		
-		
+		return DatabaseConnector.getTemplatesList();
 		//hook to dbc
 		
 		//return in format "Templatename1,TemplateName2...."
-		return null;
+		
 	}
 	
 
