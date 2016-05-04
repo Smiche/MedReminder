@@ -1,5 +1,8 @@
 package org.observis.medreminder.server;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 public class DatabaseConnector {
@@ -106,6 +109,43 @@ public class DatabaseConnector {
 		
 		closeConnection();
 		return;
+	}
+	
+	public static boolean checkLogin(String username, String password){
+		openConnection();
+		String result = "";
+		ResultSet rs = null;
+		String checkLoginSQL = "SELECT password FROM doctors WHERE username LIKE '"+username+"'";
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(checkLoginSQL);
+			while (rs.next()) {
+				result = rs.getString("password");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+		
+		byte[] bytesOfMessage = null;
+
+		MessageDigest md =null;
+		try {
+			bytesOfMessage = result.getBytes("UTF-8");
+			md = MessageDigest.getInstance("MD5");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		byte[] thedigest = md.digest(bytesOfMessage);
+		String hash = new String(thedigest);
+		if (result.equals(hash)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 }

@@ -1,4 +1,5 @@
 package org.observis.medreminder.server;
+import java.sql.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,18 +20,18 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 
 	@Override
 	public boolean logIn(String username, String password) throws IllegalArgumentException {
-		System.out.println("Login attempted: "+username+" "+password);
-		if(username.equals("Test") && password.equals("testpass")){
-			loggedIn = true;
+		if (DatabaseConnector.checkLogin(username, password)){
+			
 	        HttpServletRequest httpServletRequest = this.getThreadLocalRequest();
 	        HttpSession session = httpServletRequest.getSession(true);
 	        session.setAttribute("user", username);
-			System.out.println("Successful login.");
-			
+			System.out.println("Successful login.");	
 			return true;
-		} else {
-		return false;
+		}else{
+			loggedIn = false;
+			return false;
 		}
+		
 		// TODO Auto-generated method stub
 
 	}
