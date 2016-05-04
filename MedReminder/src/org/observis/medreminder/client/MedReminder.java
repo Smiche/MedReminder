@@ -151,6 +151,8 @@ public class MedReminder implements EntryPoint {
 					@Override
 					public void onSuccess(String result) {
 						Window.alert(result);
+						loadPatients();
+						updatePatients();
 					
 					}
 					
@@ -167,10 +169,6 @@ public class MedReminder implements EntryPoint {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadPatients(){
-
-		TextCell patientsCell = new TextCell();
-		CellList<String> cellList = new CellList<String>(patientsCell);
-		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		
 		
 		comService.getPatients(new AsyncCallback(){
@@ -186,10 +184,16 @@ public class MedReminder implements EntryPoint {
 				String a = (String) result;
 				patientString = a.split(",");
 			}
-			
 		});
-		
+			
+
+	}
+	
+	private void updatePatients(){
 		List<String> patients = Arrays.asList(patientString);
+		TextCell patientsCell = new TextCell();
+		CellList<String> cellList = new CellList<String>(patientsCell);
+		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		
 		final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 		    cellList.setSelectionModel(selectionModel);
@@ -210,8 +214,6 @@ public class MedReminder implements EntryPoint {
 		    patientsPanel.add(cellList);
 		    patientsPanel.add(addPatient);
 		    
-
-			
 
 	}
 
@@ -358,7 +360,6 @@ public class MedReminder implements EntryPoint {
 		MenuBar bar = new MenuBar(true);
 		bar.addItem("Logout", issueLogout);
 		
-		individualPanel = new VerticalPanel();
 		
 		
 		addPatient.addClickHandler(new ClickHandler(){
@@ -370,7 +371,7 @@ public class MedReminder implements EntryPoint {
 		});
 		
 	    
-	    loadPatients();
+	    updatePatients();
 	    
 	    holder.insert(patientsPanel, 0);	    
 		holder.insert(individualPanel,1);
@@ -577,6 +578,7 @@ public class MedReminder implements EntryPoint {
 								if(authenticated){
 									loginResponse.setText("Login successful.");
 									loginBox.center();
+									loadPatients();
 									loggedIn = true;
 								} else {
 									loginResponse.setText("Login failed.");
