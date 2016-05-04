@@ -4,7 +4,7 @@ import java.sql.*;
 public class DatabaseConnector {
 	// JDBC driver name and database URL
 	   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-	   static final String DB_URL = "jdbc:mysql://192.168.8.110:3306/patients";
+	   static final String DB_URL = "jdbc:mysql://ALEXANDER-PC\\SQLEXPRESS\\patients";
 
 	   //  Database credentials
 	   static final String USER = "root";
@@ -23,7 +23,7 @@ public class DatabaseConnector {
 		      System.out.println("Connected database successfully...");
 		      System.out.println("Insert Values");
 		      stmnt = conn.createStatement();
-		      String sql = "INSERT INTO templates " + "VALUES (2, 'SAMPLE TEXT')";
+		      //String sql = "INSERT INTO templates " + "VALUES (2, 'SAMPLE TEXT')";
 		     // stmnt.executeUpdate(sql);
 		      System.out.println("done");
 		   }catch(SQLException se){

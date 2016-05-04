@@ -59,6 +59,8 @@ public class MedReminder implements EntryPoint {
 	Button addPatient = new Button("Add patient");
 	TextBox phoneBox = new TextBox();
 	TextBox patientNameBox = new TextBox();
+	VerticalPanel patientsPanel = new VerticalPanel();
+	
 	/**
 	 * Updating the patient panel
 	 * Args Patient name
@@ -149,6 +151,35 @@ public class MedReminder implements EntryPoint {
 		
 	}
 	
+	private void loadPatients(){
+		TextCell patientsCell = new TextCell();
+		CellList<String> cellList = new CellList<String>(patientsCell);
+		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		
+		final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+		    cellList.setSelectionModel(selectionModel);
+		    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+		      public void onSelectionChange(SelectionChangeEvent event) {
+		        String selected = selectionModel.getSelectedObject();
+		        if (selected != null) {
+		        	updateMiddlePanel(selected);
+		          //Window.alert("You selected: " + selected);
+		        }
+		      }
+		    });
+		    //Window.alert("Size:"+patients.size());
+		    cellList.setRowCount(patients.size(), true);
+		    cellList.setRowData(0,patients);
+		    patientsPanel = new VerticalPanel();
+		    
+		    patientsPanel.add(cellList);
+		    patientsPanel.add(addPatient);
+		    
+
+			
+
+	}
+	
 	private void updateMiddlePanel(String patient){		
 		individualPanel.clear();
 		Label patientName = new Label();
@@ -225,7 +256,6 @@ public class MedReminder implements EntryPoint {
 		bar.addItem("Logout", issueLogout);
 		
 		individualPanel = new VerticalPanel();
-		TextCell patientsCell = new TextCell();
 		
 		
 		addPatient.addClickHandler(new ClickHandler(){
@@ -236,28 +266,8 @@ public class MedReminder implements EntryPoint {
 			
 		});
 		
-		CellList<String> cellList = new CellList<String>(patientsCell);
-		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		
-		 // Add a selection model to handle user selection.
-	    final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-	    cellList.setSelectionModel(selectionModel);
-	    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-	      public void onSelectionChange(SelectionChangeEvent event) {
-	        String selected = selectionModel.getSelectedObject();
-	        if (selected != null) {
-	        	updateMiddlePanel(selected);
-	          //Window.alert("You selected: " + selected);
-	        }
-	      }
-	    });
-	    //Window.alert("Size:"+patients.size());
-	    cellList.setRowCount(patients.size(), true);
-	    cellList.setRowData(0,patients);
-	    VerticalPanel patientsPanel = new VerticalPanel();
 	    
-	    patientsPanel.add(cellList);
-	    patientsPanel.add(addPatient);
+	    loadPatients();
 	    
 	    holder.insert(patientsPanel, 0);	    
 		holder.insert(individualPanel,1);
