@@ -59,7 +59,7 @@ public class MedReminder implements EntryPoint {
 	TextBox phoneBox = new TextBox();
 	TextBox patientNameBox = new TextBox();
 	VerticalPanel patientsPanel = new VerticalPanel();
-	
+	String[] patientString;
 	/**
 	 * Updating the patient panel
 	 * Args Patient name
@@ -156,25 +156,25 @@ public class MedReminder implements EntryPoint {
 		CellList<String> cellList = new CellList<String>(patientsCell);
 		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		
-		String[] patientString;
 		
 		comService.getPatients(new AsyncCallback(){
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+				Window.alert("Unable to fetch patients.");
 				
 			}
 
 			@Override
 			public void onSuccess(Object result) {
-				// TODO Auto-generated method stub
+				String a = (String) result;
+				patientString = a.split(",");
 				
 			}
 			
 		});
 		
-		List<String> patients = Arrays.asList("Patient1","Patient2","Patient3","Patient4","etc...");
+		List<String> patients = Arrays.asList(patientString);
 		
 		final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 		    cellList.setSelectionModel(selectionModel);
