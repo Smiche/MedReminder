@@ -24,7 +24,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 	}
 
 	@Override
-	public void addTemplate(String name, String day, String time)
+	public void addTemplate(String text, String weekDays, String time,String duration)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		
@@ -40,6 +40,31 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
         //get all patients from doctor id
 		//
 		return DatabaseConnector.returnPatient(doctorName);
+	}
+
+	@Override
+	public String[] getTemplate(String text, String weekDays, String time,
+			String duration) throws IllegalArgumentException {
+		String[] template = new String[4];
+		//hook to db connector
+		
+		//return in format:
+		//template[0] = template text
+		//template[1] = "1,0,1,0,0,0,1" - 7 elements
+		//template[2] = "00:00,01:00,02:12,00:12,...."
+		//template[3] = duration
+		//return template;
+		return null;
+	}
+
+	@Override
+	public String getTemplateList() throws IllegalArgumentException {
+		
+		
+		//hook to dbc
+		
+		//return in format "Templatename1,TemplateName2...."
+		return null;
 	}
 	
 
