@@ -8,6 +8,8 @@ import org.observis.medreminder.shared.FieldVerifier;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -25,6 +27,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -52,14 +55,19 @@ public class MedReminder implements EntryPoint {
 	private final LoginServiceAsync loginService = GWT.create(LoginService.class);
 	private final CommunicationServiceAsync comService = GWT.create(CommunicationService.class);
 	private boolean loggedIn = false;
-	HorizontalPanel holder = new HorizontalPanel();
-	VerticalPanel individualPanel = new VerticalPanel();
-	Button addSchedule = new Button("add");
-	Button addPatient = new Button("Add patient");
-	TextBox phoneBox = new TextBox();
-	TextBox patientNameBox = new TextBox();
-	VerticalPanel patientsPanel = new VerticalPanel();
-	String[] patientString;
+	private HorizontalPanel holder = new HorizontalPanel();
+	private VerticalPanel individualPanel = new VerticalPanel();
+	private Button addSchedule = new Button("add");
+	private Button addPatient = new Button("Add patient");
+	private TextBox phoneBox = new TextBox();
+	private TextBox patientNameBox = new TextBox();
+	private VerticalPanel patientsPanel = new VerticalPanel();
+	ListBox templatesList = new ListBox();
+	
+	private String[] patientString;
+	private String[] templateString;
+
+	
 	/**
 	 * Updating the patient panel
 	 * Args Patient name
@@ -198,6 +206,12 @@ public class MedReminder implements EntryPoint {
 			
 
 	}
+
+	private void loadTemplate(String templateName){
+		
+		
+		
+	}
 	
 	private void updateMiddlePanel(String patient){		
 		//clear panel
@@ -259,6 +273,19 @@ public class MedReminder implements EntryPoint {
 		messageBox.setTitle("Message to Send:");
 		messageBox.setWidth("350px");
 		messageBox.setHeight("250px");
+		
+		for(String t:templateString){
+			templatesList.addItem(t);
+		}
+		templatesList.addChangeHandler(new ChangeHandler(){
+
+			@Override
+			public void onChange(ChangeEvent event) {
+				loadTemplate(templatesList.getSelectedItemText());
+			}
+			
+		});
+		
 		
 		individualPanel.add(patientName);
 		individualPanel.add(finalDate);
