@@ -93,8 +93,12 @@ public class DatabaseConnector {
 			rs = stmt.executeQuery(getDoctorId);
 			while (rs.next()) {
 				doctorID = rs.getString("doctor_id");
-				System.out.println(doctorID);
 			}
+			System.out.println(doctorID);
+			String addPatientSQL = "INSERT INTO patients (doctor_id, number) VALUES ('"+doctorID+"','"+phone+"')";
+			//Using the same string variable to execute another SQL statement
+			stmt.execute(addPatientSQL);
+			//new patient record created
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
