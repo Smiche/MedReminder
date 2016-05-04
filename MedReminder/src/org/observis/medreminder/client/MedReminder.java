@@ -1,6 +1,7 @@
 package org.observis.medreminder.client;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.observis.medreminder.shared.FieldVerifier;
@@ -21,6 +22,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
@@ -33,6 +35,7 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -62,10 +65,14 @@ public class MedReminder implements EntryPoint {
 	private TextBox phoneBox = new TextBox();
 	private TextBox patientNameBox = new TextBox();
 	private VerticalPanel patientsPanel = new VerticalPanel();
-	ListBox templatesList = new ListBox();
-	
+	private DatePicker finalDayBox = new DatePicker();
+	private CheckBox[] days = new CheckBox[7];
+	private ListBox templatesList = new ListBox();
+	private boolean[] weekArray = new boolean[7];
+	private String[] dayTime;
 	private String[] patientString;
 	private String[] templateString;
+	private HorizontalPanel timePanel = new HorizontalPanel();
 
 	
 	/**
@@ -158,8 +165,10 @@ public class MedReminder implements EntryPoint {
 		
 	}
 	
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadPatients(){
+
 		TextCell patientsCell = new TextCell();
 		CellList<String> cellList = new CellList<String>(patientsCell);
 		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
@@ -208,9 +217,36 @@ public class MedReminder implements EntryPoint {
 	}
 
 	private void loadTemplate(String templateName){
+		//interface to get template
+		
+		//splitting array
+		String[] result = null;
+		String text = result[0];
+		String[] weekdays = result[1].split(",");
+		dayTime = result[2].split(",");
+		String duration = result[3];
+		
+		
+		//Date logic
+		Date dueDate = finalDayBox.getHighlightedDate();
+		CalendarUtil.addDaysToDate(dueDate, Integer.parseInt(duration));
+		finalDayBox.setValue(dueDate);
+		
+		//load weekdays
+		for(int i=0;i<weekdays.length;i++){
+			if(Integer.parseInt(weekdays[i])==0){
+				weekArray[i] = false;
+			} else {
+				weekArray[i] = true;
+			}
+		}
+		
+		//load times
 		
 		
 		
+		
+		updateMiddlePanel(((Label) individualPanel.getWidget(0)).getText());
 	}
 	
 	private void updateMiddlePanel(String patient){		
@@ -221,9 +257,6 @@ public class MedReminder implements EntryPoint {
 		patientName.setText("Patient name: "+patient);
 		
 		Button saveData = new Button("Save");
-		DatePicker finalDate = new DatePicker();
-		
-		CheckBox[] days = new CheckBox[7];
 		
 		for(int i =0;i<7;i++){
 			days[i]= new CheckBox();
@@ -235,12 +268,17 @@ public class MedReminder implements EntryPoint {
 		days[4].setText("Friday");
 		days[5].setText("Saturday");
 		days[6].setText("Sunday");
+		//check used days
+		for(int i=0;i<7;i++){
+				days[i].setValue(weekArray[i]);
+		}
+		
+		
 		HorizontalPanel dayPanel = new HorizontalPanel();
 		for(CheckBox box:days){
 			dayPanel.add(box);
 		}
 		
-		HorizontalPanel timePanel = new HorizontalPanel();
 		
 		TextBox hour = new TextBox();
 		hour.setWidth("15px");
@@ -257,9 +295,20 @@ public class MedReminder implements EntryPoint {
 		minute.setText("00");
 		minute.setMaxLength(2);
 		
+		if(dayTime!= null){
+			for(int i=0;i<dayTime.length;i++){
+				String[] hourMinute = dayTime[i].split(":");
+				hour.setText(""+hourMinute[0]);
+				minute.setText(""+hourMinute[1]);
+				timePanel.add(hour);
+				timePanel.add(deli);
+				timePanel.add(minute);
+			}
+		} else {		
 		timePanel.add(hour);
 		timePanel.add(deli);
 		timePanel.add(minute);	
+		}
 		
 		//handler to add new time schedules
 		addSchedule.addClickHandler(new ClickHandler(){
@@ -286,9 +335,8 @@ public class MedReminder implements EntryPoint {
 			
 		});
 		
-		
 		individualPanel.add(patientName);
-		individualPanel.add(finalDate);
+		individualPanel.add(finalDayBox);
 		individualPanel.add(dayPanel);
 		individualPanel.add(timePanel);
 		individualPanel.add(messageBox);		
@@ -334,7 +382,7 @@ public class MedReminder implements EntryPoint {
 	}
 	public void onModuleLoad() {
 			  
-		
+		//main screen
 		final Button sendButton = new Button("Send");
 		final Button loginButton = new Button("Login");
 		final TextBox nameField = new TextBox();
@@ -545,10 +593,11 @@ public class MedReminder implements EntryPoint {
 					}
 				}
 		// Add a handler to send the name to the server
-		MyHandler handler = new MyHandler();
+		//MyHandler handler = new MyHandler();
 		LoginHandler loginHandler = new LoginHandler();
-		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
+		//sendButton.addClickHandler(handler);
+		nameField.addKeyUpHandler(loginHandler);
+		passField.addKeyUpHandler(loginHandler);
 		loginButton.addClickHandler(loginHandler);
 	}
 }
