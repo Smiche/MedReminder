@@ -9,8 +9,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("communication")
 public interface CommunicationService extends RemoteService {
 	String addPatient(String name,String phone) throws IllegalArgumentException;
-	void addTemplate(String text,String weekDays,String time,String duration)throws IllegalArgumentException;
-	String[] getTemplate(String text,String weekDays,String time,String duration)throws IllegalArgumentException;
+	void addTemplate(String text,String weekDays,String time,String duration,String description)throws IllegalArgumentException;
+	String[] getTemplate(String description)throws IllegalArgumentException;
 	String getTemplateList()throws IllegalArgumentException;
 	String getPatients()throws IllegalArgumentException;
 }
