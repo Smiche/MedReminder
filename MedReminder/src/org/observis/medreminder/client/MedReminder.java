@@ -200,12 +200,17 @@ public class MedReminder implements EntryPoint {
 	}
 	
 	private void updateMiddlePanel(String patient){		
+		//clear panel
 		individualPanel.clear();
+		//new elements
 		Label patientName = new Label();
 		patientName.setText("Patient name: "+patient);
+		
 		Button saveData = new Button("Save");
 		DatePicker finalDate = new DatePicker();
+		
 		CheckBox[] days = new CheckBox[7];
+		
 		for(int i =0;i<7;i++){
 			days[i]= new CheckBox();
 		}
@@ -242,20 +247,25 @@ public class MedReminder implements EntryPoint {
 		timePanel.add(deli);
 		timePanel.add(minute);	
 		
+		//handler to add new time schedules
 		addSchedule.addClickHandler(new ClickHandler(){
-
 			@Override
 			public void onClick(ClickEvent event) {
 				addSchedule();
 			}
-			
 		});
 		
-		individualPanel.add(patientName);		
-		individualPanel.add(saveData);
+		TextBox messageBox = new TextBox();
+		messageBox.setTitle("Message to Send:");
+		messageBox.setWidth("350px");
+		messageBox.setHeight("250px");
+		
+		individualPanel.add(patientName);
 		individualPanel.add(finalDate);
 		individualPanel.add(dayPanel);
 		individualPanel.add(timePanel);
+		individualPanel.add(messageBox);		
+		individualPanel.add(saveData);
 		individualPanel.add(addSchedule);
 		
 		holder.insert(individualPanel,1);
