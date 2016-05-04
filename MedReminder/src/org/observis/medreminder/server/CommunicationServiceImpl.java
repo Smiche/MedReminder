@@ -17,10 +17,10 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
         String username = (String) session.getAttribute("user");
 		System.out.println("Username attempint to add:" +username);
 		// TODO Auto-generated method stub
-		
+		DatabaseConnector.addPatientRecord(name, phone, username);
 		//	
 		
-		return "Patient added:"+name+phone;
+		return "Patient added:"+name+phone+username;
 	}
 
 	@Override
@@ -37,14 +37,9 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
         HttpSession session = httpServletRequest.getSession(true);
         String doctorName = (String) session.getAttribute("user");
         //
-        try{
-        	DatabaseConnector.returnPatient("doctorR");
-        } catch(Exception e){
-        	e.printStackTrace();
-        }
         //get all patients from doctor id
 		//
-		return "kkkkk,kkkkk,kk,kkk";
+		return DatabaseConnector.returnPatient(doctorName);
 	}
 	
 

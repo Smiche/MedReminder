@@ -12,7 +12,7 @@ public class DatabaseConnector {
 	static final String USER = "root";
 	static final String PASS = "rootroot";
 
-	public static void main() {
+	public static void openConnection() { //opens connection to the server
 		try {
 			// STEP 2: Register JDBC driver
 			Class.forName("com.mysql.jdbc.Driver");
@@ -30,25 +30,28 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		} finally {
 		}
-		// finally block used to close resources
-		// try{
-		// if(conn!=null)
-		// conn.close();
-		// }catch(SQLException se){
-		// se.printStackTrace();
-		// }//end finally try
-		// }//end try
-		// System.out.println("Goodbye!");
+		
 	}// end main
+	public static void closeConnection(){ //close connection to the server
+		try{
+			if(conn!=null)
+				conn.close();
+			System.out.println("Connection is closed");
+		}catch(SQLException se){
+			se.printStackTrace();
+		}
+		
+	}
 
-	public static String returnPatient(String doctorName) {
-		main();
+	public static String returnPatient(String doctorName) { //returns patients numbers for exact doctor name
+		openConnection();
 		ResultSet rs = null;
 		String doctorID = "";
 		String resultString = "";
 		try {
 			stmt = conn.createStatement();
 			String doctorSql = "SELECT doctor_id FROM doctors WHERE username LIKE '" + doctorName + "'";
+			//get doctor_id from doctors database to find patients numbers for this exact doctor
 			rs = stmt.executeQuery(doctorSql);
 			while (rs.next()) {
 				doctorID = rs.getString("doctor_id");
@@ -74,9 +77,31 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		closeConnection();
 		return resultString;
-
+		
+	}
+	
+	public static void addPatientRecord(String name, String phone, String username){
+		ResultSet rs = null;
+		openConnection();
+		String doctorID ="";
+		try {
+			stmt = conn.createStatement();
+			String getDoctorId = "SELECT doctor_id FROM doctors WHERE username LIKE '" + username + "'";
+			//get doctor_id from doctors database to find patients numbers for this exact doctor
+			rs = stmt.executeQuery(getDoctorId);
+			while (rs.next()) {
+				doctorID = rs.getString("doctor_id");
+				System.out.println(doctorID);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		closeConnection();
+		return;
 	}
 
 }
