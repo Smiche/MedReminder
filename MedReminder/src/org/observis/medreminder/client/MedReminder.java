@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.observis.medreminder.shared.FieldVerifier;
-
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -39,6 +37,7 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import org.observis.medreminder.shared.FieldVerifier;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
