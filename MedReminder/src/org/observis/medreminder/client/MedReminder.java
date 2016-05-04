@@ -78,6 +78,11 @@ public class MedReminder implements EntryPoint {
 	 * Updating the patient panel
 	 * Args Patient name
 	 */
+	
+	private void submitTask(){
+		//String text = individualPanel.getWidget(0);
+	}
+	
 	private void addSchedule(){
 		individualPanel.remove(individualPanel.getWidgetCount()-1);
 		TextBox hour = new TextBox();
@@ -153,7 +158,6 @@ public class MedReminder implements EntryPoint {
 						Window.alert(result);
 						loadPatients();
 						updatePatients();
-					
 					}
 					
 				});
@@ -258,6 +262,16 @@ public class MedReminder implements EntryPoint {
 		patientName.setText("Patient name: "+patient);
 		
 		Button saveData = new Button("Save");
+		
+		saveData.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				submitTask();
+				
+			}
+			
+		});
 		
 		for(int i =0;i<7;i++){
 			days[i]= new CheckBox();
