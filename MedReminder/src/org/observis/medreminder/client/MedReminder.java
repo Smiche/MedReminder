@@ -52,7 +52,6 @@ public class MedReminder implements EntryPoint {
 	private final LoginServiceAsync loginService = GWT.create(LoginService.class);
 	private final CommunicationServiceAsync comService = GWT.create(CommunicationService.class);
 	private boolean loggedIn = false;
-	private List<String> patients = Arrays.asList("Patient1","Patient2","Patient3","Patient4","etc...");
 	HorizontalPanel holder = new HorizontalPanel();
 	VerticalPanel individualPanel = new VerticalPanel();
 	Button addSchedule = new Button("add");
@@ -151,10 +150,31 @@ public class MedReminder implements EntryPoint {
 		
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadPatients(){
 		TextCell patientsCell = new TextCell();
 		CellList<String> cellList = new CellList<String>(patientsCell);
 		cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		
+		String[] patientString;
+		
+		comService.getPatients(new AsyncCallback(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(Object result) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		List<String> patients = Arrays.asList("Patient1","Patient2","Patient3","Patient4","etc...");
 		
 		final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 		    cellList.setSelectionModel(selectionModel);
