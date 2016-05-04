@@ -24,6 +24,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 	}
 
 	@Override
+	// client adding template to server
 	public void addTemplate(String text, String weekDays, String time,String duration)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
@@ -31,6 +32,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 	}
 
 	@Override
+
 	public String getPatients() throws IllegalArgumentException {
 		
         HttpServletRequest httpServletRequest = this.getThreadLocalRequest();
@@ -42,7 +44,8 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 		return DatabaseConnector.returnPatient(doctorName);
 	}
 
-	@Override
+	@Override 
+	//client getting template t
 	public String[] getTemplate(String text, String weekDays, String time,
 			String duration) throws IllegalArgumentException {
 		String[] template = new String[4];

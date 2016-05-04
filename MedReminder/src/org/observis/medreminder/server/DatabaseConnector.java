@@ -153,4 +153,8 @@ public class DatabaseConnector {
 		    return null;
 		}
 
+	//public static String[] addTemplate(String text, String days, String time, String duration){
+		
+		
+	//}
 }
