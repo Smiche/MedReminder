@@ -173,21 +173,27 @@ public class DatabaseConnector {
 	}
 	public static String[] getTemplateRecord (String description){
 		openConnection();
-		String sqlQuery ="SELECT ('text','days','time','duration','template_desc' FROM templates WHERE template_description LIKE '"+description+"'";		
+		System.out.println("Description is:"+description);
+		String sqlQuery ="SELECT * FROM templates WHERE template_desc LIKE '"+description+"'";		
 		String[] templateRecord = new String[5];
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
+			while(rs.next()){
 			templateRecord[0] = rs.getString("text");
 			templateRecord[1] = rs.getString("days");
 			templateRecord[2] = rs.getString("time");
 			templateRecord[3] = rs.getString("duration");
 			templateRecord[4] = rs.getString("template_desc");
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		for(String t:templateRecord){
+			System.out.println(t);
 		}
 		closeConnection();
 		return templateRecord;
@@ -203,6 +209,7 @@ public class DatabaseConnector {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			while (rs.next()) {
+				System.out.println(rs.getString("template_desc"));
 				if (templateList.length() < 2) {
 					templateList += rs.getString("template_desc");
 				} else {
@@ -214,7 +221,7 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return templateList;
 		
 	}
 }
