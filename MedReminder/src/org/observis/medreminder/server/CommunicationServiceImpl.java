@@ -9,6 +9,11 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class CommunicationServiceImpl extends RemoteServiceServlet implements CommunicationService{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public String addPatient(String name, String phone)
 			throws IllegalArgumentException {
