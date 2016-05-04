@@ -119,6 +119,10 @@ public class DatabaseConnector {
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(checkLoginSQL);
+			if(rs ==null){
+				return false;
+						
+			}
 			while (rs.next()) {
 				result = rs.getString("password");
 			}
@@ -128,24 +132,25 @@ public class DatabaseConnector {
 		}
 		closeConnection();
 		
-		byte[] bytesOfMessage = null;
-
-		MessageDigest md =null;
-		try {
-			bytesOfMessage = result.getBytes("UTF-8");
-			md = MessageDigest.getInstance("MD5");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		byte[] thedigest = md.digest(bytesOfMessage);
-		String hash = new String(thedigest);
-		if (result.equals(hash)){
+		System.out.println(MD5(password)+" "+result);
+		if (result.equals(MD5(password))){
 			return true;
 		}else{
 			return false;
 		}
 	}
+	public static String MD5(String md5) {
+		   try {
+		        java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+		        byte[] array = md.digest(md5.getBytes());
+		        StringBuffer sb = new StringBuffer();
+		        for (int i = 0; i < array.length; ++i) {
+		          sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+		       }
+		        return sb.toString();
+		    } catch (java.security.NoSuchAlgorithmException e) {
+		    }
+		    return null;
+		}
 
 }
