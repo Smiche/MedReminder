@@ -3,7 +3,13 @@ package org.observis.medreminder.server;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.observis.medreminder.client.Message;
 
@@ -248,10 +254,14 @@ public class DatabaseConnector {
 	}
 
 	public static void insertSchedule(Message msg, String patientPhone) {
-		// Handle calendar logic
-
-		// handle db logic
-
+		Date curDate = new Date();
+		Calendar curCal = Calendar.getInstance();
+		curCal.setTime(curDate);
+		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
+		
+		//Insert into db delivery -> delivered -> false, phone -> patientPhone, time -> msg.time,  patient_id -> from patient phone with query
+		// date -> curCal.get(Calendar.DAY_OF_YEAR)
+		
 	}
 
 }

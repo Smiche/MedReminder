@@ -148,9 +148,7 @@ public class MedReminder implements EntryPoint {
 					@Override
 					public void onSuccess(String result) {
 						showDialog("Succesfully scheduled: " + result);
-
 					}
-
 				});
 	}
 
