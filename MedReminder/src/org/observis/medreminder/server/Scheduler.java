@@ -10,10 +10,29 @@ public class Scheduler {
 	ArrayList<Boolean> weekDays = new ArrayList<Boolean>();
 	
 	public Scheduler(String text, String weekdays, String times,
-			String duration, String patientPhone){
+			Date curDate, Date finalDate, String patientPhone){
+		
+		
+		
+		
+		
+		Calendar curCal = Calendar.getInstance();
+		Calendar finalCal = Calendar.getInstance();
+		
+		curCal.setTime(curDate);
+		finalCal.setTime(finalDate);
+		
+		int duration = 0;
+		
+		if(finalCal.get(Calendar.DAY_OF_YEAR) - curCal.get(Calendar.DAY_OF_YEAR) > 0){
+		duration = finalCal.get(Calendar.DAY_OF_YEAR) - curCal.get(Calendar.DAY_OF_YEAR);
+		} else {
+			duration = (finalCal.get(Calendar.DAY_OF_YEAR)+curCal.getActualMaximum(Calendar.DAY_OF_YEAR)) - curCal.get(Calendar.DAY_OF_YEAR);
+		}
 		
 		String[] timeArray = times.split(",");
-		int dayCount = Integer.parseInt(duration);
+		
+		int dayCount = duration;
 		
 		String[] weekDaysString = weekdays.split(",");
 		for(int i =0;i<7;i++){
@@ -24,12 +43,19 @@ public class Scheduler {
 			}
 		}
 		
-		Calendar dueCal = Calendar.getInstance();
-		dueCal.setTime(new Date());
+		//swap days to match Calendar.DAY_OF_WEEK
+		ArrayList<Boolean> temp = new ArrayList<Boolean>();
+		temp.add(weekDays.get(6));
+		for(int i = 0;i<6;i++){
+			temp.add(weekDays.get(i));
+		}
+		weekDays = temp;
 		
-		
+		Calendar dueCal = curCal;
+
 		for(int i = 0;i<dayCount;i++){
 			if(weekDays.get(dueCal.get(Calendar.DAY_OF_WEEK)-1)){
+				System.out.println("Iterated day of week:"+dueCal.get(Calendar.DAY_OF_WEEK)+" iterated day of month: "+dueCal.get(Calendar.DAY_OF_MONTH));
 				for(int j=0;j<timeArray.length;j++){
 					//String[] singleTime = timeArray[j].split(":");
 				    int year = dueCal.get(Calendar.YEAR);

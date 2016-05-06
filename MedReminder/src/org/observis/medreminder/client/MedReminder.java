@@ -2,6 +2,7 @@ package org.observis.medreminder.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -73,7 +76,7 @@ public class MedReminder implements EntryPoint {
 	private TextBox phoneBox = new TextBox();
 	private TextBox patientNameBox = new TextBox();
 	private VerticalPanel patientsPanel = new VerticalPanel();
-	private DatePicker finalDayBox = new DatePicker();
+	private DatePicker finalDayBox = new DatePicker();	
 	private CheckBox[] days = new CheckBox[7];
 	private ListBox templatesList = new ListBox();
 	private boolean[] weekArray = new boolean[7];
@@ -84,6 +87,8 @@ public class MedReminder implements EntryPoint {
 	private String[] templateString;
 	private String[] templatesListString;
 	private HorizontalPanel timePanel = new HorizontalPanel();
+	private DialogBox popupPanel;
+	private Date selectedDate;
 	HandlerRegistration addTimeHandler;
 
 
@@ -95,39 +100,72 @@ public class MedReminder implements EntryPoint {
 
 	private void submitTask() {
 		// String text = individualPanel.getWidget(0);
+		String patientName = ((Label) individualPanel.getWidget(0)).getText().replaceAll("Patient phone: ","");
+		String text = ((TextBox) individualPanel.getWidget(5)).getText();
+		
+		Date curDate = new Date();
+		
+		Date finalDate;
+		finalDate = selectedDate;
+		
+		String timesString = "";
+		
+		int atTimeIndex = 0;
+		for(int i=0;i<timePanel.getWidgetCount();i++){
+			if(timePanel.getWidget(i) instanceof TextBox){
+				if(atTimeIndex == 0){
+					timesString+=((TextBox) timePanel.getWidget(i)).getText();
+				}
+				if(atTimeIndex != 0 && atTimeIndex%2 == 0){
+					timesString+=","+((TextBox) timePanel.getWidget(i)).getText();
+				}
+				if(atTimeIndex%2 == 1){
+					timesString+=":"+((TextBox) timePanel.getWidget(i)).getText();
+				}
+				atTimeIndex++;
+			}
+		}
+		
+		String daysCheckedString = "";
+		
+		for(int i = 0;i<days.length;i++){
+			if(i==0){
+				if(days[i].getValue()){
+				daysCheckedString+="1";	
+				} else {
+					daysCheckedString+="0";
+				}
+			} else {
+				if(days[i].getValue()){
+				daysCheckedString+=",1";	
+				} else {
+					daysCheckedString+=",0";
+				}
+			}
+		}
+		Window.alert(curDate.toString());
+		Window.alert(finalDate.toString());
+		
+		comService.sendTask(text, daysCheckedString, timesString, curDate, finalDate, patientName, new AsyncCallback<String>(){
 
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				showDialog("Failed to send task.");
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				// TODO Auto-generated method stub
+				showDialog(result);
+			}
+			
+		});
 	}
 
 	private void addTimeBox() {
 		dayTime.add("00:00");
 		updateTimePanel();
-		//dayTime 
-		//individualPanel.remove(individualPanel.getWidgetCount() - 1);
-		//TextBox hour = new TextBox();
-		//hour.setWidth("15px");
-		//hour.setText("00");
-		//hour.setMaxLength(2);
-
-	//	Label deli = new Label();
-		//deli.setText(":");
-		//deli.setWidth("8px");
-		//deli.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-		//TextBox minute = new TextBox();
-		//minute.setWidth("15px");
-		//minute.setText("00");
-		//minute.setMaxLength(2);
-	//	HorizontalPanel timePanel = new HorizontalPanel();
-
-		//timePanel.add(hour);
-		//timePanel.add(deli);
-		//timePanel.add(minute);
-		
-		
-		//individualPanel.add(timePanel);
-		//individualPanel.add(addSchedule);
-		// individualPanel.getWidget(individualPanel.getWidgetCount());
-
 	}
 	
 	private void updateTimePanel(){
@@ -327,7 +365,8 @@ public class MedReminder implements EntryPoint {
 				//Date curDate = CalendarUtil.
 				Date dueDate = new Date();
 				CalendarUtil.addDaysToDate(dueDate, Integer.parseInt(duration));
-				finalDayBox.setValue(dueDate);
+				selectedDate = dueDate;
+				finalDayBox.setValue(dueDate, true);
 				
 				messageBox.setText(text);
 				
@@ -350,7 +389,35 @@ public class MedReminder implements EntryPoint {
 		
 		// splitting array
 	}
-
+	private void showDialog(String textToShow){
+		//addPatientBox.setText("Add a patient.");
+		//addPatientBox.setAnimationEnabled(true);
+		final Button closeButton = new Button("Close");
+		//final Button addClick = new Button("Add");
+		// We can set the id of a widget by accessing its Element
+		closeButton.getElement().setId("closeButton");
+		VerticalPanel dialogVPanel = new VerticalPanel();
+		//phoneBox.setText("+358");
+		VerticalPanel pan = new VerticalPanel();
+		
+		pan.addStyleName("dialogVPanel");
+		//dialogVPanel.add(new HTML("<b>*Patient Phone number:</b>"));
+		//dialogVPanel.add(phoneBox);
+		//dialogVPanel.add(new HTML("Patient name(optional):"));
+		//dialogVPanel.add(patientNameBox);
+		popupPanel.setText("Info");
+		pan.add(new HTML("<b>"+textToShow+"</b"));
+		pan.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		pan.add(closeButton);
+		popupPanel.setWidget(dialogVPanel);
+		popupPanel.center();
+		// Add a handler to close the DialogBox
+		closeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				addPatientBox.hide();
+			}
+		});
+	}
 	private void updateMiddlePanel(String patient) {
 		// clear panel
 		// new elements
@@ -482,6 +549,15 @@ public class MedReminder implements EntryPoint {
 				loadTemplate(templatesList.getSelectedItemText());
 			}
 		});
+		finalDayBox.addValueChangeHandler(new ValueChangeHandler<Date>(){
+
+			@Override
+			public void onValueChange(ValueChangeEvent<Date> event) {
+				selectedDate = event.getValue();				
+			}
+			
+		});
+		
 		Command issueLogout = new Command() {
 
 			@Override

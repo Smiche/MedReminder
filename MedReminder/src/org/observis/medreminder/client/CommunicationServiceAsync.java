@@ -1,5 +1,7 @@
 package org.observis.medreminder.client;
 
+import java.util.Date;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface CommunicationServiceAsync {
@@ -8,5 +10,5 @@ public interface CommunicationServiceAsync {
 	void getTemplate(String description, AsyncCallback<String[]> callback)throws IllegalArgumentException;
 	void getTemplateList(AsyncCallback<String> callback) throws IllegalArgumentException;
 	void getPatients(AsyncCallback<String> callback)throws IllegalArgumentException;
-	void sendTask(String text, String weekdays, String times, String duration, String patientPhone,AsyncCallback<String> callback)throws IllegalArgumentException;
+	void sendTask(String text, String weekdays, String times, Date curDate, Date finalDate, String patientPhone,AsyncCallback<String> callback)throws IllegalArgumentException;
 }

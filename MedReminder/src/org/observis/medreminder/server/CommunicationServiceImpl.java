@@ -1,5 +1,7 @@
 package org.observis.medreminder.server;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -78,16 +80,23 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 
 	@Override
 	public String sendTask(String text, String weekdays, String times,
-			String duration, String patientPhone)
+			Date curDate, Date finalDate, String patientPhone)
 			throws IllegalArgumentException {
 		//Call scheduler class (or create instance?)
-		Scheduler newScheduler = new Scheduler(text,weekdays,times,duration,patientPhone);	
+		Scheduler newScheduler = new Scheduler(text,weekdays,times,curDate,finalDate,patientPhone);	
 		//handle db
 		
 		for(int i =0;i<newScheduler.getDeliveries().size();i++){
-			DatabaseConnector.insertSchedules(newScheduler.getDeliveries().get(i));
+			//DatabaseConnector.insertSchedules(newScheduler.getDeliveries().get(i));
+			System.out.println("Printing a task:");
+			System.out.println(newScheduler.getDeliveries().get(i).date);
+			System.out.print(" "+newScheduler.getDeliveries().get(i).text);
+			System.out.print(" "+newScheduler.getDeliveries().get(i).patient);
+			System.out.print(" "+newScheduler.getDeliveries().get(i).time);
+			
 		}
-	
+		
+		
 		//return the amount of added tasks
 		return "Added "+newScheduler.getDeliveries().size()+" tasks.";
 	}
