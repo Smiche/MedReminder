@@ -16,5 +16,5 @@ public interface CommunicationService extends RemoteService {
 	ArrayList<Message> getPackage(String description)throws IllegalArgumentException;
 	String getPackagesList()throws IllegalArgumentException;
 	String getPatients()throws IllegalArgumentException;
-	String sendTask(String text, String weekdays,String times, Date curDate,Date finalDate,String patientPhone)throws IllegalArgumentException;
+	String scheduleMessages(ArrayList<Message> messages,String patientPhone) throws IllegalArgumentException;
 }

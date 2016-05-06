@@ -11,5 +11,5 @@ public interface CommunicationServiceAsync {
 	void getPackage(String description, AsyncCallback<ArrayList<Message>> callback)throws IllegalArgumentException;
 	void getPackagesList(AsyncCallback<String> callback) throws IllegalArgumentException;
 	void getPatients(AsyncCallback<String> callback)throws IllegalArgumentException;
-	void sendTask(String text, String weekdays, String times, Date curDate, Date finalDate, String patientPhone,AsyncCallback<String> callback)throws IllegalArgumentException;
+	void scheduleMessages(ArrayList<Message> messages,String patientPhone, AsyncCallback<String> callback)throws IllegalArgumentException;
 }

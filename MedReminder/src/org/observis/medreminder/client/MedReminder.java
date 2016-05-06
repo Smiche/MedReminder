@@ -60,8 +60,7 @@ public class MedReminder implements EntryPoint {
 			+ "connection and try again.";
 
 	/**
-	 * Create a remote service proxy to talk to the server-side Greeting
-	 * service.
+	 * Create a remote service proxy to talk to the server-side services.
 	 */
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
@@ -72,28 +71,28 @@ public class MedReminder implements EntryPoint {
 	private boolean loggedIn = false;
 	private HorizontalPanel holder = new HorizontalPanel();
 	private VerticalPanel individualPanel = new VerticalPanel();
-	
+
 	private Button addPatient = new Button("Add patient");
 	private TextBox phoneBox = new TextBox();
 	private TextBox patientNameBox = new TextBox();
-	
+
 	private VerticalPanel patientsPanel = new VerticalPanel();
 	private ListBox packagesList = new ListBox();
 	private DialogBox addPatientBox = new DialogBox();
 
 	private String[] patientString;
 	private String[] packagesListString;
-	private DialogBox popupPanel;
+	private DialogBox popupPanel = new DialogBox();
 
 	private VerticalPanel packageHolder = new VerticalPanel();
 	private VerticalPanel messageHolder = new VerticalPanel();
-	
-	private int messagesCount = 0;
+
 	private String medValue = "";
-	
 	private String selectedPatient = "";
 
 	MenuBar bar = new MenuBar();
+
+	private HandlerRegistration closeDialogHandlerReg;
 
 	/**
 	 * Submitting task to server
@@ -101,45 +100,59 @@ public class MedReminder implements EntryPoint {
 
 	private void submitTask() {
 		ArrayList<Message> data = new ArrayList<Message>();
-		
-		VerticalPanel cur = new VerticalPanel();		
+
+		VerticalPanel cur = new VerticalPanel();
 		String txt = "";
 		String dayVal = "";
 		HorizontalPanel tp = new HorizontalPanel();
-		String h = "",m = "";
+		String h = "", m = "";
 		String title = "";
-		
-		for(int i = 0;i<packageHolder.getWidgetCount();i++){
-			if(packageHolder.getWidget(i) instanceof VerticalPanel){
-			cur = (VerticalPanel) packageHolder.getWidget(i);
+
+		for (int i = 0; i < packageHolder.getWidgetCount(); i++) {
+			if (packageHolder.getWidget(i) instanceof VerticalPanel) {
+				cur = (VerticalPanel) packageHolder.getWidget(i);
 			} else {
 				return;
 			}
-			if(cur.getWidget(0) instanceof Label){
-				title = ((Label)cur.getWidget(0)).getText();
+			if (cur.getWidget(0) instanceof Label) {
+				title = ((Label) cur.getWidget(0)).getText();
 			}
-			if(cur.getWidget(1) instanceof TextBox){
+			if (cur.getWidget(1) instanceof TextBox) {
 				txt = ((TextBox) cur.getWidget(1)).getText();
 			}
 			txt.replaceAll("[value]", medValue);
-			if(cur.getWidget(2) instanceof TextBox){
-				dayVal = ((TextBox)cur.getWidget(2)).getText();
+			if (cur.getWidget(2) instanceof TextBox) {
+				dayVal = ((TextBox) cur.getWidget(2)).getText();
 			}
-			if(cur.getWidget(3) instanceof HorizontalPanel){
+			if (cur.getWidget(3) instanceof HorizontalPanel) {
 				tp = (HorizontalPanel) cur.getWidget(3);
 			}
-			if(tp.getWidget(0) instanceof TextBox && tp.getWidget(2) instanceof TextBox){
+			if (tp.getWidget(0) instanceof TextBox
+					&& tp.getWidget(2) instanceof TextBox) {
 				h = ((TextBox) tp.getWidget(0)).getText();
 				m = ((TextBox) tp.getWidget(2)).getText();
 			}
-			
-			data.add(new Message(title, txt, dayVal, h+":"+m));
-		}
-		
-		
-	}
-	
 
+			data.add(new Message(title, txt, dayVal, h + ":" + m));
+		}
+
+		comService.scheduleMessages(data, selectedPatient,
+				new AsyncCallback<String>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						showDialog("Succesfully scheduled: " + result);
+
+					}
+
+				});
+	}
 
 	private void addPatientPopup() {
 		// Create the popup dialog box
@@ -263,7 +276,7 @@ public class MedReminder implements EntryPoint {
 			public void onSuccess(String result) {
 				int sel = packagesList.getSelectedIndex();
 				packagesList.clear();
-				
+
 				String[] arr = result.split(",");
 				packagesListString = arr;
 				packagesList.addItem("");
@@ -278,98 +291,103 @@ public class MedReminder implements EntryPoint {
 
 	@SuppressWarnings("unused")
 	private void loadPackage(String packageName) {
-		
+
 		// interface to get template
-		comService.getPackage(packageName, new AsyncCallback<ArrayList<Message>>() {
+		comService.getPackage(packageName,
+				new AsyncCallback<ArrayList<Message>>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Unable to fetch template by name.");
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Unable to fetch template by name.");
 
-			}
+					}
 
-			@Override
-			public void onSuccess(ArrayList<Message> messages) {
-				individualPanel.remove(packageHolder);
-				messageHolder.clear();
-				packageHolder.clear();
-				//templateString = result;
-				for(Message msg:messages){
-					//replace text logic
-					String text = msg.text.replaceAll("[value]", "");
-					//
-					TextBox box = new TextBox();
-					box.setText(text);
-					box.setAlignment(TextAlignment.JUSTIFY);
-					String[] time = msg.time.split(":");
-					
-					TextBox hour = new TextBox();
-					hour.setWidth("15px");
-					hour.setMaxLength(2);
-					
-					TextBox minute = new TextBox();
-					minute.setWidth("15px");
-					minute.setMaxLength(2);
-					
-					Label delimeter = new Label(":");
-					delimeter.setWidth("8px");
-					delimeter.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-					
-					HorizontalPanel timePane = new HorizontalPanel();
-					
-					timePane.add(hour);
-					timePane.add(delimeter);
-					timePane.add(minute);
-					
-					messageHolder.add(new Label(""+msg.title));
-					messageHolder.add(box);
-					messageHolder.add(new Label("Day: " + msg.day));
-					messageHolder.add(timePane);
-					packageHolder.add(messageHolder);
-					individualPanel.add(packageHolder);
-				}
-				
-				
-				//String patientLabelString = ((Label) individualPanel.getWidget(0)).getText();
-			}
+					@Override
+					public void onSuccess(ArrayList<Message> messages) {
+						individualPanel.remove(packageHolder);
+						messageHolder.clear();
+						packageHolder.clear();
+						// templateString = result;
+						for (Message msg : messages) {
+							// replace text logic
+							String text = msg.text.replaceAll("[value]", "");
+							//
+							TextBox box = new TextBox();
+							box.setText(text);
+							box.setAlignment(TextAlignment.JUSTIFY);
+							String[] time = msg.time.split(":");
 
-		});
+							TextBox hour = new TextBox();
+							hour.setWidth("15px");
+							hour.setMaxLength(2);
+
+							TextBox minute = new TextBox();
+							minute.setWidth("15px");
+							minute.setMaxLength(2);
+
+							Label delimeter = new Label(":");
+							delimeter.setWidth("8px");
+							delimeter
+									.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+							HorizontalPanel timePane = new HorizontalPanel();
+
+							timePane.add(hour);
+							timePane.add(delimeter);
+							timePane.add(minute);
+
+							messageHolder.add(new Label("" + msg.title));
+							messageHolder.add(box);
+							messageHolder.add(new Label("Day: " + msg.day));
+							messageHolder.add(timePane);
+							packageHolder.add(messageHolder);
+							individualPanel.add(packageHolder);
+						}
+
+						// String patientLabelString = ((Label)
+						// individualPanel.getWidget(0)).getText();
+					}
+
+				});
 	}
-	private void showDialog(String textToShow){
-		//addPatientBox.setText("Add a patient.");
-		//addPatientBox.setAnimationEnabled(true);
+
+	private void showDialog(String textToShow) {
+		// addPatientBox.setText("Add a patient.");
+		// addPatientBox.setAnimationEnabled(true);
 		final Button closeButton = new Button("Close");
-		//final Button addClick = new Button("Add");
+		// final Button addClick = new Button("Add");
 		// We can set the id of a widget by accessing its Element
 		closeButton.getElement().setId("closeButton");
-		VerticalPanel dialogVPanel = new VerticalPanel();
-		//phoneBox.setText("+358");
+		// phoneBox.setText("+358");
 		VerticalPanel pan = new VerticalPanel();
-		
+
 		pan.addStyleName("dialogVPanel");
-		//dialogVPanel.add(new HTML("<b>*Patient Phone number:</b>"));
-		//dialogVPanel.add(phoneBox);
-		//dialogVPanel.add(new HTML("Patient name(optional):"));
-		//dialogVPanel.add(patientNameBox);
+		// dialogVPanel.add(new HTML("<b>*Patient Phone number:</b>"));
+		// dialogVPanel.add(phoneBox);
+		// dialogVPanel.add(new HTML("Patient name(optional):"));
+		// dialogVPanel.add(patientNameBox);
 		popupPanel.setText("Info");
-		pan.add(new HTML("<b>"+textToShow+"</b"));
+		pan.add(new HTML("<b>" + textToShow + "</b"));
 		pan.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 		pan.add(closeButton);
-		popupPanel.setWidget(dialogVPanel);
+		popupPanel.setWidget(pan);
 		popupPanel.center();
 		// Add a handler to close the DialogBox
-		closeButton.addClickHandler(new ClickHandler() {
+		closeDialogHandlerReg = closeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				addPatientBox.hide();
+				popupPanel.hide();
+				popupPanel.clear();
+				closeDialogHandlerReg.removeHandler();
 			}
 		});
 	}
+
 	private void updateMiddlePanel() {
 		// clear panel
 		// new elements
-		//finalDayBox = new DatePicker();
-		Label patientName = new Label("Patient phone: "+selectedPatient);
-		//patientName.setText("Patient phone: " + patient);
+		// finalDayBox = new DatePicker();
+		Label patientName = new Label("Patient phone: " + selectedPatient);
+		// patientName.setText("Patient phone: " + patient);
 
 		Button submitData = new Button("Submit");
 
@@ -380,13 +398,13 @@ public class MedReminder implements EntryPoint {
 			}
 
 		});
-		
+
 		requestPackagesList();
 		individualPanel.clear();
 		individualPanel.add(patientName);
 		individualPanel.add(packagesList);
 		individualPanel.add(submitData);
-		
+
 		holder.insert(individualPanel, 1);
 
 	}
@@ -426,7 +444,7 @@ public class MedReminder implements EntryPoint {
 				loadPackage(packagesList.getSelectedItemText());
 			}
 		});
-		
+
 		Command issueLogout = new Command() {
 
 			@Override
@@ -666,5 +684,6 @@ public class MedReminder implements EntryPoint {
 		nameField.addKeyUpHandler(loginHandler);
 		passField.addKeyUpHandler(loginHandler);
 		loginButton.addClickHandler(loginHandler);
+		showDialog("hello");
 	}
 }
