@@ -1,11 +1,13 @@
 package org.observis.medreminder.server;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.observis.medreminder.client.CommunicationService;
+import org.observis.medreminder.client.Message;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -54,9 +56,11 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 
 	@Override 
 	//client getting template t
-	public String[] getTemplate(String description) throws IllegalArgumentException {
+	public ArrayList<Message> getPackage(String description) throws IllegalArgumentException {
 		String[] template = new String[4];
-		return DatabaseConnector.getTemplateRecord(description);
+		
+		//array list to return all messages
+		return null;
 		//hook to db connector
 		
 		//return in format:
@@ -69,13 +73,12 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 	}
 
 	@Override
-	public String getTemplateList() throws IllegalArgumentException {
+	public String getPackagesList() throws IllegalArgumentException {
 		
-		return DatabaseConnector.getTemplatesList();
-		//hook to dbc
-		
-		//return in format "Templatename1,TemplateName2...."
-		
+		//need to change to getPackagesList
+		//return DatabaseConnector.getTemplatesList();
+		//
+		return null;
 	}
 
 	@Override

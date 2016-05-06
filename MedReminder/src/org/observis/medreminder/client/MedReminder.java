@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DatePicker;
@@ -71,158 +72,74 @@ public class MedReminder implements EntryPoint {
 	private boolean loggedIn = false;
 	private HorizontalPanel holder = new HorizontalPanel();
 	private VerticalPanel individualPanel = new VerticalPanel();
-	private Button addSchedule = new Button("add");
+	
 	private Button addPatient = new Button("Add patient");
 	private TextBox phoneBox = new TextBox();
 	private TextBox patientNameBox = new TextBox();
+	
 	private VerticalPanel patientsPanel = new VerticalPanel();
-	private DatePicker finalDayBox = new DatePicker();	
-	private CheckBox[] days = new CheckBox[7];
-	private ListBox templatesList = new ListBox();
-	private boolean[] weekArray = new boolean[7];
+	private ListBox packagesList = new ListBox();
 	private DialogBox addPatientBox = new DialogBox();
-	private TextBox messageBox = new TextBox();
-	private ArrayList<String> dayTime = new ArrayList<String>();
-	private String[] patientString;
-	private String[] templateString;
-	private String[] templatesListString;
-	private HorizontalPanel timePanel = new HorizontalPanel();
-	private DialogBox popupPanel;
-	private Date selectedDate;
-	HandlerRegistration addTimeHandler;
 
+	private String[] patientString;
+	private String[] packagesListString;
+	private DialogBox popupPanel;
+
+	private VerticalPanel packageHolder = new VerticalPanel();
+	private VerticalPanel messageHolder = new VerticalPanel();
+	
+	private int messagesCount = 0;
+	private String medValue = "";
+	
+	private String selectedPatient = "";
 
 	MenuBar bar = new MenuBar();
 
 	/**
-	 * Updating the patient panel Args Patient name
+	 * Submitting task to server
 	 */
 
 	private void submitTask() {
-		// String text = individualPanel.getWidget(0);
-		String patientName = ((Label) individualPanel.getWidget(0)).getText().replaceAll("Patient phone: ","");
-		String text = ((TextBox) individualPanel.getWidget(5)).getText();
+		ArrayList<Message> data = new ArrayList<Message>();
 		
-		Date curDate = new Date();
+		VerticalPanel cur = new VerticalPanel();		
+		String txt = "";
+		String dayVal = "";
+		HorizontalPanel tp = new HorizontalPanel();
+		String h = "",m = "";
+		String title = "";
 		
-		Date finalDate;
-		finalDate = selectedDate;
-		
-		String timesString = "";
-		
-		int atTimeIndex = 0;
-		for(int i=0;i<timePanel.getWidgetCount();i++){
-			if(timePanel.getWidget(i) instanceof TextBox){
-				if(atTimeIndex == 0){
-					timesString+=((TextBox) timePanel.getWidget(i)).getText();
-				}
-				if(atTimeIndex != 0 && atTimeIndex%2 == 0){
-					timesString+=","+((TextBox) timePanel.getWidget(i)).getText();
-				}
-				if(atTimeIndex%2 == 1){
-					timesString+=":"+((TextBox) timePanel.getWidget(i)).getText();
-				}
-				atTimeIndex++;
-			}
-		}
-		
-		String daysCheckedString = "";
-		
-		for(int i = 0;i<days.length;i++){
-			if(i==0){
-				if(days[i].getValue()){
-				daysCheckedString+="1";	
-				} else {
-					daysCheckedString+="0";
-				}
+		for(int i = 0;i<packageHolder.getWidgetCount();i++){
+			if(packageHolder.getWidget(i) instanceof VerticalPanel){
+			cur = (VerticalPanel) packageHolder.getWidget(i);
 			} else {
-				if(days[i].getValue()){
-				daysCheckedString+=",1";	
-				} else {
-					daysCheckedString+=",0";
-				}
+				return;
 			}
-		}
-		Window.alert(curDate.toString());
-		Window.alert(finalDate.toString());
-		
-		comService.sendTask(text, daysCheckedString, timesString, curDate, finalDate, patientName, new AsyncCallback<String>(){
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				showDialog("Failed to send task.");
+			if(cur.getWidget(0) instanceof Label){
+				title = ((Label)cur.getWidget(0)).getText();
 			}
-
-			@Override
-			public void onSuccess(String result) {
-				// TODO Auto-generated method stub
-				showDialog(result);
+			if(cur.getWidget(1) instanceof TextBox){
+				txt = ((TextBox) cur.getWidget(1)).getText();
+			}
+			txt.replaceAll("[value]", medValue);
+			if(cur.getWidget(2) instanceof TextBox){
+				dayVal = ((TextBox)cur.getWidget(2)).getText();
+			}
+			if(cur.getWidget(3) instanceof HorizontalPanel){
+				tp = (HorizontalPanel) cur.getWidget(3);
+			}
+			if(tp.getWidget(0) instanceof TextBox && tp.getWidget(2) instanceof TextBox){
+				h = ((TextBox) tp.getWidget(0)).getText();
+				m = ((TextBox) tp.getWidget(2)).getText();
 			}
 			
-		});
-	}
-
-	private void addTimeBox() {
-		dayTime.add("00:00");
-		updateTimePanel();
+			data.add(new Message(title, txt, dayVal, h+":"+m));
+		}
+		
+		
 	}
 	
-	private void updateTimePanel(){
-		timePanel.clear();
-		for (int i = 0; i < dayTime.size(); i++) {
-			TextBox hour = new TextBox();
-			hour.setWidth("15px");
-			hour.setMaxLength(2);
 
-			Label deli = new Label();
-			deli.setText(":");
-			deli.setWidth("8px");
-			deli.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-			TextBox minute = new TextBox();
-			minute.setWidth("15px");
-			minute.setMaxLength(2);
-			
-			
-			String[] hourMinute = dayTime.get(i).split(":");
-			hour.setText("" + hourMinute[0]);
-			minute.setText("" + hourMinute[1]);
-			timePanel.add(hour);
-			timePanel.add(deli);
-			timePanel.add(minute);
-		}
-		timePanel.add(addSchedule);
-	}
-
-	@SuppressWarnings("unused")
-	private void requestTemplateList() {
-		comService.getTemplateList(new AsyncCallback<String>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Unable to fetch templateList.");
-			}
-
-			@Override
-			public void onSuccess(String result) {
-				int sel = templatesList.getSelectedIndex();
-				templatesList.clear();
-				
-				String[] arr = result.split(",");
-				templatesListString = arr;
-				templatesList.addItem("");
-				//templatesList.setSelectedIndex(index);
-				for (int i = 0; i < templatesListString.length; i++) {
-				//	Window.alert("adding template item:"
-					//		+ templatesListString[i]);
-					templatesList.addItem(templatesListString[i]);
-				}
-				templatesList.setSelectedIndex(sel);
-			}
-
-		});
-	}
 
 	private void addPatientPopup() {
 		// Create the popup dialog box
@@ -318,8 +235,8 @@ public class MedReminder implements EntryPoint {
 						String selected = selectionModel.getSelectedObject();
 						if (selected != null) {
 							// Window.alert("You selected: " + selected);
-							updateMiddlePanel(selected);
-
+							selectedPatient = selected;
+							updateMiddlePanel();
 						}
 					}
 				});
@@ -334,10 +251,36 @@ public class MedReminder implements EntryPoint {
 	}
 
 	@SuppressWarnings("unused")
-	private void loadTemplate(String templateName) {
+	private void requestPackagesList() {
+		comService.getPackagesList(new AsyncCallback<String>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Unable to fetch templateList.");
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				int sel = packagesList.getSelectedIndex();
+				packagesList.clear();
+				
+				String[] arr = result.split(",");
+				packagesListString = arr;
+				packagesList.addItem("");
+
+				for (int i = 0; i < packagesListString.length; i++) {
+					packagesList.addItem(packagesListString[i]);
+				}
+				packagesList.setSelectedIndex(sel);
+			}
+		});
+	}
+
+	@SuppressWarnings("unused")
+	private void loadPackage(String packageName) {
 		
 		// interface to get template
-		comService.getTemplate(templateName, new AsyncCallback<String[]>() {
+		comService.getPackage(packageName, new AsyncCallback<ArrayList<Message>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -346,48 +289,51 @@ public class MedReminder implements EntryPoint {
 			}
 
 			@Override
-			public void onSuccess(String[] result) {
-				templateString = result;
-				
-				String[] arr = templateString;
-				String text = arr[0];
-				String[] weekdays = arr[1].split(",");
-				String[] times = arr[2].split(",");
-				
-				dayTime.clear();
-				for(String t:times){
-					dayTime.add(t);
+			public void onSuccess(ArrayList<Message> messages) {
+				individualPanel.remove(packageHolder);
+				messageHolder.clear();
+				packageHolder.clear();
+				//templateString = result;
+				for(Message msg:messages){
+					//replace text logic
+					String text = msg.text.replaceAll("[value]", "");
+					//
+					TextBox box = new TextBox();
+					box.setText(text);
+					box.setAlignment(TextAlignment.JUSTIFY);
+					String[] time = msg.time.split(":");
+					
+					TextBox hour = new TextBox();
+					hour.setWidth("15px");
+					hour.setMaxLength(2);
+					
+					TextBox minute = new TextBox();
+					minute.setWidth("15px");
+					minute.setMaxLength(2);
+					
+					Label delimeter = new Label(":");
+					delimeter.setWidth("8px");
+					delimeter.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+					
+					HorizontalPanel timePane = new HorizontalPanel();
+					
+					timePane.add(hour);
+					timePane.add(delimeter);
+					timePane.add(minute);
+					
+					messageHolder.add(new Label(""+msg.title));
+					messageHolder.add(box);
+					messageHolder.add(new Label("Day: " + msg.day));
+					messageHolder.add(timePane);
+					packageHolder.add(messageHolder);
+					individualPanel.add(packageHolder);
 				}
-				String duration = arr[3];
 				
-				// Date logic
-				//Date dueDate = finalDayBox.getHighlightedDate();
-				//Date curDate = CalendarUtil.
-				Date dueDate = new Date();
-				CalendarUtil.addDaysToDate(dueDate, Integer.parseInt(duration));
-				selectedDate = dueDate;
-				finalDayBox.setValue(dueDate, true);
 				
-				messageBox.setText(text);
-				
-				// load weekdays
-				for (int i = 0; i < weekdays.length; i++) {
-					if (Integer.parseInt(weekdays[i]) == 0) {
-						weekArray[i] = false;
-					} else {
-						weekArray[i] = true;
-					}
-				}
-
-				// load times
-				String patientLabelString = ((Label) individualPanel.getWidget(0)).getText();
-				updateMiddlePanel(patientLabelString.replaceAll("Patient phone: ", ""));
+				//String patientLabelString = ((Label) individualPanel.getWidget(0)).getText();
 			}
 
 		});
-		
-		
-		// splitting array
 	}
 	private void showDialog(String textToShow){
 		//addPatientBox.setText("Add a patient.");
@@ -418,96 +364,28 @@ public class MedReminder implements EntryPoint {
 			}
 		});
 	}
-	private void updateMiddlePanel(String patient) {
+	private void updateMiddlePanel() {
 		// clear panel
 		// new elements
 		//finalDayBox = new DatePicker();
-		Label patientName = new Label();
-		patientName.setText("Patient phone: " + patient);
+		Label patientName = new Label("Patient phone: "+selectedPatient);
+		//patientName.setText("Patient phone: " + patient);
 
-		Button saveData = new Button("Submit");
+		Button submitData = new Button("Submit");
 
-		saveData.addClickHandler(new ClickHandler() {
+		submitData.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				submitTask();
 			}
 
 		});
-
-		for (int i = 0; i < 7; i++) {
-			days[i] = new CheckBox();
-		}
-		days[0].setText("Monday");
-		days[1].setText("Tuesday");
-		days[2].setText("Thirsday");
-		days[3].setText("Wednesday");
-		days[4].setText("Friday");
-		days[5].setText("Saturday");
-		days[6].setText("Sunday");
-		// check used days
-		for (int i = 0; i < 7; i++) {
-			days[i].setValue(weekArray[i]);
-		}
-
-		HorizontalPanel dayPanel = new HorizontalPanel();
-		for (CheckBox box : days) {
-			dayPanel.add(box);
-		}
-
-		timePanel.clear();
-			for (int i = 0; i < dayTime.size(); i++) {
-				TextBox hour = new TextBox();
-				hour.setWidth("15px");
-				hour.setMaxLength(2);
-
-				Label deli = new Label();
-				deli.setText(":");
-				deli.setWidth("8px");
-				deli.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-				TextBox minute = new TextBox();
-				minute.setWidth("15px");
-				minute.setMaxLength(2);
-				
-				
-				String[] hourMinute = dayTime.get(i).split(":");
-				hour.setText("" + hourMinute[0]);
-				minute.setText("" + hourMinute[1]);
-				timePanel.add(hour);
-				timePanel.add(deli);
-				timePanel.add(minute);
-			}
-			
 		
-		// handler to add new time schedules, remove old handler
-		if(addTimeHandler!=null)
-		addTimeHandler.removeHandler();
-		
-		addTimeHandler = addSchedule.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				addTimeBox();
-			}
-		});
-		
-		timePanel.add(addSchedule);
-		
-		messageBox.setTitle("Message to Send:");
-		messageBox.setWidth("350px");
-		messageBox.setHeight("250px");
-		requestTemplateList();
-		
+		requestPackagesList();
 		individualPanel.clear();
-
 		individualPanel.add(patientName);
-		individualPanel.add(templatesList);
-		individualPanel.add(finalDayBox);
-		individualPanel.add(dayPanel);
-		individualPanel.add(timePanel);
-		individualPanel.add(messageBox);
-		individualPanel.add(saveData);
-		//individualPanel.add(addSchedule);
+		individualPanel.add(packagesList);
+		individualPanel.add(submitData);
 		
 		holder.insert(individualPanel, 1);
 
@@ -542,20 +420,11 @@ public class MedReminder implements EntryPoint {
 	}
 
 	public void onModuleLoad() {
-		dayTime.add("00:00");
-		templatesList.addChangeHandler(new ChangeHandler() {
+		packagesList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				loadTemplate(templatesList.getSelectedItemText());
+				loadPackage(packagesList.getSelectedItemText());
 			}
-		});
-		finalDayBox.addValueChangeHandler(new ValueChangeHandler<Date>(){
-
-			@Override
-			public void onValueChange(ValueChangeEvent<Date> event) {
-				selectedDate = event.getValue();				
-			}
-			
 		});
 		
 		Command issueLogout = new Command() {
