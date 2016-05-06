@@ -75,6 +75,22 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements Co
 		//return in format "Templatename1,TemplateName2...."
 		
 	}
+
+	@Override
+	public String sendTask(String text, String weekdays, String times,
+			String duration, String patientPhone)
+			throws IllegalArgumentException {
+		//Call scheduler class (or create instance?)
+		Scheduler newScheduler = new Scheduler(text,weekdays,times,duration,patientPhone);	
+		//handle db
+		
+		for(int i =0;i<newScheduler.getDeliveries().size();i++){
+			DatabaseConnector.insertSchedules(newScheduler.getDeliveries().get(i));
+		}
+	
+		//return the amount of added tasks
+		return "Added "+newScheduler.getDeliveries().size()+" tasks.";
+	}
 	
 
 }

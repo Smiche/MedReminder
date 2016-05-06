@@ -8,5 +8,5 @@ public interface CommunicationServiceAsync {
 	void getTemplate(String description, AsyncCallback<String[]> callback)throws IllegalArgumentException;
 	void getTemplateList(AsyncCallback<String> callback) throws IllegalArgumentException;
 	void getPatients(AsyncCallback<String> callback)throws IllegalArgumentException;
-	
+	void sendTask(String text, String weekdays, String times, String duration, String patientPhone,AsyncCallback<String> callback)throws IllegalArgumentException;
 }

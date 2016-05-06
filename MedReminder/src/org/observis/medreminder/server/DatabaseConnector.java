@@ -218,7 +218,12 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 		
-		return templateList;
+		return templateList;	
+	}
+	
+	public static void insertSchedules(DeliveryTask task){
+		//Handle db logic
 		
 	}
+	
 }
