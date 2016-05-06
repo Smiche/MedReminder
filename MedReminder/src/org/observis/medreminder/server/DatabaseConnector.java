@@ -8,7 +8,7 @@ import java.sql.*;
 public class DatabaseConnector {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql://192.168.0.186:3306/patients";
+	static final String DB_URL = "jdbc:mysql://192.168.0.100:3306/patients";
 	static Connection conn = null;
 	static Statement stmt = null;
 	// Database credentials
@@ -192,9 +192,6 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for(String t:templateRecord){
-			System.out.println(t);
-		}
 		closeConnection();
 		return templateRecord;
 		
@@ -209,7 +206,7 @@ public class DatabaseConnector {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			while (rs.next()) {
-				System.out.println(rs.getString("template_desc"));
+				//System.out.println(rs.getString("template_desc"));
 				if (templateList.length() < 2) {
 					templateList += rs.getString("template_desc");
 				} else {

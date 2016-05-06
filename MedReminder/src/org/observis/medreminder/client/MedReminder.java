@@ -1,5 +1,6 @@
 package org.observis.medreminder.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Command;
@@ -77,11 +79,13 @@ public class MedReminder implements EntryPoint {
 	private boolean[] weekArray = new boolean[7];
 	private DialogBox addPatientBox = new DialogBox();
 	private TextBox messageBox = new TextBox();
-	private String[] dayTime = new String[1];
+	private ArrayList<String> dayTime = new ArrayList<String>();
 	private String[] patientString;
 	private String[] templateString;
 	private String[] templatesListString;
 	private HorizontalPanel timePanel = new HorizontalPanel();
+	HandlerRegistration addTimeHandler;
+
 
 	MenuBar bar = new MenuBar();
 
@@ -94,32 +98,63 @@ public class MedReminder implements EntryPoint {
 
 	}
 
-	private void addSchedule() {
-		individualPanel.remove(individualPanel.getWidgetCount() - 1);
-		TextBox hour = new TextBox();
-		hour.setWidth("15px");
-		hour.setText("00");
-		hour.setMaxLength(2);
+	private void addTimeBox() {
+		dayTime.add("00:00");
+		updateTimePanel();
+		//dayTime 
+		//individualPanel.remove(individualPanel.getWidgetCount() - 1);
+		//TextBox hour = new TextBox();
+		//hour.setWidth("15px");
+		//hour.setText("00");
+		//hour.setMaxLength(2);
 
-		Label deli = new Label();
-		deli.setText(":");
-		deli.setWidth("8px");
-		deli.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+	//	Label deli = new Label();
+		//deli.setText(":");
+		//deli.setWidth("8px");
+		//deli.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-		TextBox minute = new TextBox();
-		minute.setWidth("15px");
-		minute.setText("00");
-		minute.setMaxLength(2);
-		HorizontalPanel timePanel = new HorizontalPanel();
+		//TextBox minute = new TextBox();
+		//minute.setWidth("15px");
+		//minute.setText("00");
+		//minute.setMaxLength(2);
+	//	HorizontalPanel timePanel = new HorizontalPanel();
 
-		timePanel.add(hour);
-		timePanel.add(deli);
-		timePanel.add(minute);
-
-		individualPanel.add(timePanel);
-		individualPanel.add(addSchedule);
+		//timePanel.add(hour);
+		//timePanel.add(deli);
+		//timePanel.add(minute);
+		
+		
+		//individualPanel.add(timePanel);
+		//individualPanel.add(addSchedule);
 		// individualPanel.getWidget(individualPanel.getWidgetCount());
 
+	}
+	
+	private void updateTimePanel(){
+		timePanel.clear();
+		for (int i = 0; i < dayTime.size(); i++) {
+			TextBox hour = new TextBox();
+			hour.setWidth("15px");
+			hour.setMaxLength(2);
+
+			Label deli = new Label();
+			deli.setText(":");
+			deli.setWidth("8px");
+			deli.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+			TextBox minute = new TextBox();
+			minute.setWidth("15px");
+			minute.setMaxLength(2);
+			
+			
+			String[] hourMinute = dayTime.get(i).split(":");
+			hour.setText("" + hourMinute[0]);
+			minute.setText("" + hourMinute[1]);
+			timePanel.add(hour);
+			timePanel.add(deli);
+			timePanel.add(minute);
+		}
+		timePanel.add(addSchedule);
 	}
 
 	@SuppressWarnings("unused")
@@ -279,7 +314,12 @@ public class MedReminder implements EntryPoint {
 				String[] arr = templateString;
 				String text = arr[0];
 				String[] weekdays = arr[1].split(",");
-				dayTime = arr[2].split(",");
+				String[] times = arr[2].split(",");
+				
+				dayTime.clear();
+				for(String t:times){
+					dayTime.add(t);
+				}
 				String duration = arr[3];
 				
 				// Date logic
@@ -302,7 +342,7 @@ public class MedReminder implements EntryPoint {
 
 				// load times
 				String patientLabelString = ((Label) individualPanel.getWidget(0)).getText();
-				updateMiddlePanel(patientLabelString.replaceAll("Patient name: ", ""));
+				updateMiddlePanel(patientLabelString.replaceAll("Patient phone: ", ""));
 			}
 
 		});
@@ -316,9 +356,9 @@ public class MedReminder implements EntryPoint {
 		// new elements
 		//finalDayBox = new DatePicker();
 		Label patientName = new Label();
-		patientName.setText("Patient name: " + patient);
+		patientName.setText("Patient phone: " + patient);
 
-		Button saveData = new Button("Save");
+		Button saveData = new Button("Submit");
 
 		saveData.addClickHandler(new ClickHandler() {
 			@Override
@@ -349,7 +389,7 @@ public class MedReminder implements EntryPoint {
 		}
 
 		timePanel.clear();
-			for (int i = 0; i < dayTime.length; i++) {
+			for (int i = 0; i < dayTime.size(); i++) {
 				TextBox hour = new TextBox();
 				hour.setWidth("15px");
 				hour.setMaxLength(2);
@@ -364,21 +404,28 @@ public class MedReminder implements EntryPoint {
 				minute.setMaxLength(2);
 				
 				
-				String[] hourMinute = dayTime[i].split(":");
+				String[] hourMinute = dayTime.get(i).split(":");
 				hour.setText("" + hourMinute[0]);
 				minute.setText("" + hourMinute[1]);
 				timePanel.add(hour);
 				timePanel.add(deli);
 				timePanel.add(minute);
 			}
-		// handler to add new time schedules
-		addSchedule.addClickHandler(new ClickHandler() {
+			
+		
+		// handler to add new time schedules, remove old handler
+		if(addTimeHandler!=null)
+		addTimeHandler.removeHandler();
+		
+		addTimeHandler = addSchedule.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				addSchedule();
+				addTimeBox();
 			}
 		});
-
+		
+		timePanel.add(addSchedule);
+		
 		messageBox.setTitle("Message to Send:");
 		messageBox.setWidth("350px");
 		messageBox.setHeight("250px");
@@ -393,7 +440,7 @@ public class MedReminder implements EntryPoint {
 		individualPanel.add(timePanel);
 		individualPanel.add(messageBox);
 		individualPanel.add(saveData);
-		individualPanel.add(addSchedule);
+		//individualPanel.add(addSchedule);
 		
 		holder.insert(individualPanel, 1);
 
@@ -428,7 +475,7 @@ public class MedReminder implements EntryPoint {
 	}
 
 	public void onModuleLoad() {
-		dayTime[0] = "00:00";
+		dayTime.add("00:00");
 		templatesList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
@@ -648,6 +695,10 @@ public class MedReminder implements EntryPoint {
 						if (authenticated) {
 							loginResponse.setText("Login successful.");
 							loginBox.center();
+							RootPanel.get("nameFieldContainer").clear();
+							RootPanel.get("passFieldContainer").clear();
+							// RootPanel.get("sendButtonContainer").add(sendButton);
+							RootPanel.get("loginButtonContainer").clear();
 							loadPatients();
 							loggedIn = true;
 						} else {
