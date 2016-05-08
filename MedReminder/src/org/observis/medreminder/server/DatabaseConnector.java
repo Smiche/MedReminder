@@ -260,7 +260,8 @@ public class DatabaseConnector {
 		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
 		
 		//Insert into db delivery -> delivered -> false, phone -> patientPhone, time -> msg.time,  patient_id -> from patient phone with query
-		// date -> curCal.get(Calendar.DAY_OF_YEAR)
+		// date -> cal.get(Calendar.DAY or DATE or DATE_OF_YEAR + YEAR..
+		
 		
 	}
 
