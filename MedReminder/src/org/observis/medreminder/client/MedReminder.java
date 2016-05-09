@@ -22,6 +22,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -65,7 +66,7 @@ public class MedReminder implements EntryPoint {
 	private VerticalPanel individualPanel = new VerticalPanel();	
 	
 	
-	private Button addPatient = new Button("Add patient");
+	private Button addPatient = new Button("Add");
 	private TextBox phoneBox = new TextBox();
 	private TextBox patientNameBox = new TextBox();
 
@@ -84,10 +85,13 @@ public class MedReminder implements EntryPoint {
 
 	private String medValue = "";
 	private String selectedPatient = "";
-
+	private String selectedPackage = "";
+	
 	MenuBar bar = new MenuBar();
 
 	private HandlerRegistration closeDialogHandlerReg;
+
+	private Button addPackage = new Button("Add");
 
 	/**
 	 * Submitting task to server
@@ -200,6 +204,9 @@ public class MedReminder implements EntryPoint {
 
 	}
 
+	private void addPackagePopup(){
+		
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadPatients() {
 		comService.getPatients(new AsyncCallback() {
@@ -264,16 +271,17 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onSuccess(String result) {
-				int sel = packagesList.getSelectedIndex();
+				Integer sel = packagesList.getSelectedIndex();
 				packagesList.clear();
-
+				
 				String[] arr = result.split(",");
 				packagesListString = arr;
 				packagesList.addItem("");
-
+				
 				for (int i = 0; i < packagesListString.length; i++) {
 					packagesList.addItem(packagesListString[i]);
 				}
+				if(sel!=null)
 				packagesList.setSelectedIndex(sel);
 			}
 		});
@@ -421,6 +429,15 @@ public class MedReminder implements EntryPoint {
 
 		});
 
+		addPackage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				addPackagePopup();
+			}
+
+		});
+
+		
 		updatePatients();
 
 		patientHolder.insert(patientsPanel, 0);
@@ -459,20 +476,20 @@ public class MedReminder implements EntryPoint {
 								String selected = selectionModel.getSelectedObject();
 								if (selected != null) {
 									Window.alert("You selected: " + selected);
-									//selectedPatient = selected;
+									selectedPackage = selected;
 									//updateMiddlePanel();
 								}
 							}
 						});
 				// Window.alert("Size:"+patients.size());
-				//Button add
+				
 				
 				packagesCellList.setRowCount(packages.size(), true);
 				packagesCellList.setRowData(0, packages);		
 				
-				
-				
 				packagesListPanel.add(packagesCellList);
+				packagesListPanel.add(addPackage);
+				
 				packageHolder.add(packagesListPanel);
 			}
 			
