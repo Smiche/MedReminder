@@ -179,8 +179,8 @@ public class DatabaseConnector {
 		curCal.setTime(curDate);
 		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
 		ResultSet rs;
-		String sqlSelect = "SELECT patient_id FROM patients WHERE number LIKE '" + patientPhone + "'";
 		String patient_id = "";
+		String sqlSelect = "SELECT patient_id FROM patients WHERE number LIKE '" + patientPhone + "'";
 		String day = "" + curCal.get(Calendar.DAY_OF_MONTH);
 		String month = "" + (curCal.get(Calendar.MONTH) + 1);
 		String year = "" + curCal.get(Calendar.YEAR);
@@ -278,7 +278,7 @@ public class DatabaseConnector {
 		String package_id = "";
 		String sqlSelect = "SELECT id FROM packages WHERE title LIKE '"+package_title+"'";
 		ResultSet rs = null;
-		String sqlInsert = "INSERT INTO messages(title,text,time,day,package_id) WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
+	
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
@@ -290,6 +290,7 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String sqlInsert = "INSERT INTO messages(title,text,time,day,package_id) WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
 		try {
 			stmt = conn.createStatement();
 			stmt.execute(sqlInsert);
@@ -353,9 +354,9 @@ public class DatabaseConnector {
 	public static ArrayList<Delivery> returnDeliveryDB(String phone){
 		openConnection();
 		ArrayList<Delivery> deliveryList = new ArrayList<Delivery>();
-		String sqlGetid = "SELECT patient_id FROM patients WHERE number = '"+phone+"'";
 		String patient_id = "";
-		String sqlSelect = "SELECT  text, date, time, sent FROM delivery WHERE patient_id = '"+patient_id+"' SORT BY date, time";
+		String sqlGetid = "SELECT patient_id FROM patients WHERE number = '"+phone+"'";
+		
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
@@ -364,7 +365,7 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+		String sqlSelect = "SELECT  text, date, time, sent FROM delivery WHERE patient_id = '"+patient_id+"' SORT BY date, time";
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
