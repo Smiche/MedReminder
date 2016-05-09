@@ -258,9 +258,11 @@ public class DatabaseConnector {
 		Calendar curCal = Calendar.getInstance();
 		curCal.setTime(curDate);
 		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
+
 		
 		//Insert into db delivery -> delivered -> false, phone -> patientPhone, time -> msg.time,  patient_id -> from patient phone with query
 		// date -> cal.get(Calendar.DAY or DATE or DATE_OF_YEAR + YEAR..
+		
 		
 		
 	}
