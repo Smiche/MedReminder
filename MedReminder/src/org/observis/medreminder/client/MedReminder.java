@@ -105,7 +105,6 @@ public class MedReminder implements EntryPoint {
 		
 		
 		for (int i = 0; i < messagePanel.size(); i++) {
-			Window.alert("getting info for new package: "+packagePanel.getWidgetCount());
 			cur = messagePanel.get(i);
 			if (cur.getWidget(0) instanceof Label) {
 				title = ((Label) cur.getWidget(0)).getText();
@@ -115,7 +114,6 @@ public class MedReminder implements EntryPoint {
 			}
 			txt.replaceAll("[value]", medValue);
 			if (cur.getWidget(2) instanceof Label) {
-				//Window.alert(((Label) cur.getWidget(2)).getText());
 				dayVal = ((Label) cur.getWidget(2)).getText();
 				dayVal = dayVal.replaceAll("Day: ", "");
 			}
@@ -127,8 +125,6 @@ public class MedReminder implements EntryPoint {
 				h = ((TextBox) tp.getWidget(0)).getText();
 				m = ((TextBox) tp.getWidget(2)).getText();
 			}
-			
-			Window.alert("adding a new message: "+title+txt+" Day is: "+dayVal+" - "+h+m);
 			data.add(new Message(title, txt, h+":"+m, dayVal));
 		}
 
@@ -303,7 +299,6 @@ public class MedReminder implements EntryPoint {
 						messagePanel.clear();
 						// templateString = result;
 						for (Message msg : messages) {
-							Window.alert("Adding a message: "+msg.time);
 							// replace text logic
 							String text = msg.text.replaceAll("[value]", "");
 							//

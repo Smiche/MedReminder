@@ -190,7 +190,6 @@ public class DatabaseConnector {
 
 	public static String[] getTemplateRecord(String description) {
 		openConnection();
-		System.out.println("Description is:" + description);
 		String sqlQuery = "SELECT * FROM templates WHERE template_desc LIKE '" + description + "'";
 		String[] templateRecord = new String[5];
 		ResultSet rs = null;
@@ -241,24 +240,17 @@ public class DatabaseConnector {
 
 	public static void insertSchedule(Message msg, String patientPhone) {
 		openConnection();
-		System.out.println("trying to insert a schedule to db");
 		Date curDate = new Date();
 		Calendar curCal = Calendar.getInstance();
-		System.out.println("Date, calendar set, day is: "+msg.day);
-		
-		System.out.println("Day is: "+Integer.parseInt(msg.day));
 		curCal.setTime(curDate);
 		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
-		System.out.println("Date acquired");
 		ResultSet rs;
 		String sqlSelect = "SELECT patient_id FROM patients WHERE number LIKE '" + patientPhone + "'";
 		String patient_id = "";
 		String day = "" + curCal.get(Calendar.DAY_OF_MONTH);
 		String month = "" + (curCal.get(Calendar.MONTH) + 1);
 		String year = "" + curCal.get(Calendar.YEAR);
-		System.out.println("Current year is: "+curCal.get(Calendar.YEAR));
 		String date = day + "-" + month + "-" + year;
-		System.out.println("Attempting to get patient ID");
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
@@ -270,7 +262,6 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}		
 		
-		System.out.println("Patient ID is: "+patient_id);
 		String sqlInsert = "INSERT INTO `delivery`(patient_id, text, date, time, sent) VALUES ('" + patient_id
 				+ "', '" + msg.text + "', '" + date + "', '" + msg.time + "', '0') ";
 		
@@ -282,7 +273,6 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Succesfully inserted?");
 		// Insert into db delivery -> delivered -> false, phone -> patientPhone,
 		// text -> msg.text time -> msg.time, patient_id -> from patient phone
 		// with query
