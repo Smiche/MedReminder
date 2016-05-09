@@ -405,6 +405,70 @@ public class MedReminder implements EntryPoint {
 				});
 	}
 
+	private void loadEditablePackage(String packageName){
+		// interface to get template
+		comService.getPackage(packageName,
+				new AsyncCallback<ArrayList<Message>>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Unable to fetch template by name.");
+
+					}
+
+					@Override
+					public void onSuccess(ArrayList<Message> messages) {
+						//individualPanel.remove(packagePanel);
+						Window.alert("Loading: "+selectedPackage+ " Size is: "+messages.size());
+						packagesMiddlePanel.clear();
+						messagesMiddlePanel.clear();
+						messagePanel.clear();
+						// templateString = result;
+						for (Message msg : messages) {
+							// replace text logic
+							String text = msg.text;
+							//
+							TextBox box = new TextBox();
+							box.setText(text);
+							box.setAlignment(TextAlignment.JUSTIFY);
+							String[] time = msg.time.split(":");
+							
+							TextBox hour = new TextBox();
+							hour.setWidth("15px");
+							hour.setMaxLength(2);
+							hour.setText(time[0]);
+							
+							TextBox minute = new TextBox();
+							minute.setWidth("15px");
+							minute.setMaxLength(2);
+							minute.setText(time[1]);
+
+							Label delimeter = new Label(":");
+							delimeter.setWidth("8px");
+							delimeter
+									.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+							HorizontalPanel timePane = new HorizontalPanel();
+
+							timePane.add(hour);
+							timePane.add(delimeter);
+							timePane.add(minute);
+							VerticalPanel vp = new VerticalPanel();
+							vp.add(new Label("" + msg.title));
+							vp.add(box);
+							vp.add(new Label("Day: " + msg.day));
+							vp.add(timePane);
+							
+							packagesMiddlePanel.add(vp);
+							
+						}
+						for(VerticalPanel p:messagePanel){
+							packageHolder.add(p);
+						}
+					}
+
+				});
+	}
 	private void showDialog(String textToShow) {
 		// addPatientBox.setText("Add a patient.");
 		// addPatientBox.setAnimationEnabled(true);
@@ -464,6 +528,10 @@ public class MedReminder implements EntryPoint {
 	}
 
 	private void updatePackageHolderMiddle(){
+		packageHolder.clear();
+		packageHolder.add(packagesListPanel);
+		loadEditablePackage(selectedPackage);
+		
 		
 	}
 	private void clearUI() {

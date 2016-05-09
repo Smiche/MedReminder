@@ -16,7 +16,7 @@ public class Delivery implements Serializable{
 	public Delivery(){
 	}
 	
-	public Delivery(String patientPhone, String text, String date, String time, Boolean sent){
+	public Delivery(String patientPhone, String text, String date, String time, String sent){
 		this.patientPhone = patientPhone;
 		this.text = text;
 		this.date = date;
