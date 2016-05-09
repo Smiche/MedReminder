@@ -103,4 +103,17 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 		
 	}
 
+	@Override
+	public void removeMessage(String title, String text)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removePackage(String title) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

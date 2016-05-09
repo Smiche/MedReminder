@@ -398,7 +398,7 @@ public class MedReminder implements EntryPoint {
 		individualPanel.add(patientName);
 		individualPanel.add(packagesList);
 		individualPanel.add(submitData);
-
+		
 		patientHolder.insert(individualPanel, 1);
 
 	}
@@ -442,10 +442,28 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onSuccess(String result) {
-				String[] list = result.split(",") ;
-				for(String item:list){
-					//packagesListPanel.add();
-				}
+				String[] packageArr = result.split(",");
+				List<String> packages = Arrays.asList(packageArr);
+				TextCell packageCell = new TextCell();
+				CellList<String> packagesCellList = new CellList<String>(packageCell);
+				// cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+
+				final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+				packagesCellList.setSelectionModel(selectionModel);
+				selectionModel
+						.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+							public void onSelectionChange(SelectionChangeEvent event) {
+								String selected = selectionModel.getSelectedObject();
+								if (selected != null) {
+									// Window.alert("You selected: " + selected);
+									selectedPatient = selected;
+									updateMiddlePanel();
+								}
+							}
+						});
+				// Window.alert("Size:"+patients.size());
+				packagesCellList.setRowCount(packages.size(), true);
+				packagesCellList.setRowData(0, packages);				
 			}
 			
 		});
