@@ -78,7 +78,7 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 
-		String getNumbers = "SELECT number FROM patients WHERE doctor_id LIKE '" + doctorID + "'";
+		String getNumbers = "SELECT number FROM patients WHERE doctor_id LIKE '" + doctorID + "' ORDER BY number";
 
 		try {
 			rs = stmt.executeQuery(getNumbers);
@@ -170,74 +170,7 @@ public class DatabaseConnector {
 		return null;
 	}
 
-	public static void addTemplateRecord(String text, String days, String time, String duration, String description) {
-		// inserting a template record to the db
-		openConnection();
-		String sqlQuery = "INSERT INTO templates( `text`, `days`, `time`, `duration`, `template_descr`) VALUES ('"
-				+ text + "','" + days + "','" + time + "','" + duration + "','" + description + "')";
-		try {
 
-			stmt = conn.createStatement();
-
-			stmt.execute(sqlQuery);
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		closeConnection();
-
-	}
-
-	public static String[] getTemplateRecord(String description) {
-		openConnection();
-		String sqlQuery = "SELECT * FROM templates WHERE template_desc LIKE '" + description + "'";
-		String[] templateRecord = new String[5];
-		ResultSet rs = null;
-		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
-			while (rs.next()) {
-				templateRecord[0] = rs.getString("text");
-				templateRecord[1] = rs.getString("days");
-				templateRecord[2] = rs.getString("time");
-				templateRecord[3] = rs.getString("duration");
-				templateRecord[4] = rs.getString("template_desc");
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		closeConnection();
-		return templateRecord;
-
-	}
-
-	public static String getTemplatesList() {
-		openConnection();
-		String templateList = "";
-		String sqlQuery = "SELECT template_desc FROM templates";
-		ResultSet rs = null;
-		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
-			while (rs.next()) {
-				// System.out.println(rs.getString("template_desc"));
-				if (templateList.length() < 2) {
-					templateList += rs.getString("template_desc");
-				} else {
-					templateList += "," + rs.getString("template_desc");
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		closeConnection();
-		return templateList;
-	}
 
 	public static void insertSchedule(Message msg, String patientPhone) {
 		openConnection();
@@ -285,7 +218,7 @@ public class DatabaseConnector {
 	public static String getPackagesDB() {
 		openConnection();
 		String packageList = "";
-		String sqlQuery = "SELECT title FROM packages";
+		String sqlQuery = "SELECT title FROM packages ORDER BY title";
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
