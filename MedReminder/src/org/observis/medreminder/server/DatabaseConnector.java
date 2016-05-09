@@ -315,6 +315,33 @@ public class DatabaseConnector {
 	
 	public static void addPackagetoDB(String title){
 		
-		String sqlInsert = "INSERT title INRO packages ";
+		String sqlInsert = "INSERT INTO packages ('"+title+"')";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeQuery(sqlInsert);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	}
+	public static void addMessagetoDB(Message msg, String package_title){
+		String sqlSelect = "SELECT id FROM packages WHERE title LIKE '"+package_title+"'";
+		ResultSet rs = null;
+		String package_id = "";
+		String sqlInsert = "INSERT INTO messages WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelect);
+			while(rs.next()){
+				package_id = rs.getString("id");
+			}
+			stmt.executeQuery(sqlInsert);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

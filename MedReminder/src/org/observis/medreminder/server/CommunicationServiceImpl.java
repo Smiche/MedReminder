@@ -88,12 +88,14 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void addPackage(String name) throws IllegalArgumentException {
 		// add a new package to the database with that title ->name
+		DatabaseConnector.addPackagetoDB(name);
 		
 	}
 
 	@Override
 	public void addMessage(Message msg, String packageName)
 			throws IllegalArgumentException {
+		DatabaseConnector.addMessagetoDB(msg, packageName);
 		//add a new message to table messages
 		//use packageName to get foreign  package_id
 		
