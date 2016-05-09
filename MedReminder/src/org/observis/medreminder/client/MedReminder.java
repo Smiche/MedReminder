@@ -62,7 +62,8 @@ public class MedReminder implements EntryPoint {
 	private HorizontalPanel patientHolder = new HorizontalPanel();
 	private HorizontalPanel packageHolder = new HorizontalPanel();
 	private VerticalPanel individualPanel = new VerticalPanel();	
-
+	
+	
 	private Button addPatient = new Button("Add patient");
 	private TextBox phoneBox = new TextBox();
 	private TextBox patientNameBox = new TextBox();
@@ -77,7 +78,7 @@ public class MedReminder implements EntryPoint {
 	private DialogBox popupPanel = new DialogBox();
 
 	private VerticalPanel packagePanel = new VerticalPanel();
-	private VerticalPanel messagePanel = new VerticalPanel();
+	private ArrayList<VerticalPanel> messagePanel = new ArrayList<VerticalPanel>();
 	private VerticalPanel deliveriesPanel = new VerticalPanel();
 
 	private String medValue = "";
@@ -93,7 +94,7 @@ public class MedReminder implements EntryPoint {
 
 	private void submitTask() {
 		ArrayList<Message> data = new ArrayList<Message>();
-
+		Window.alert("submitting data?");
 		VerticalPanel cur = new VerticalPanel();
 		String txt = "";
 		String dayVal = "";
@@ -101,12 +102,10 @@ public class MedReminder implements EntryPoint {
 		String h = "", m = "";
 		String title = "";
 		
-		for (int i = 0; i < packagePanel.getWidgetCount(); i++) {
-			if (packagePanel.getWidget(i) instanceof VerticalPanel) {
-				cur = (VerticalPanel) packagePanel.getWidget(i);
-			} else {
-				return;
-			}
+		
+		for (int i = 0; i < messagePanel.size(); i++) {
+			Window.alert("getting info for new package: "+packagePanel.getWidgetCount());
+			cur = messagePanel.get(i);
 			if (cur.getWidget(0) instanceof Label) {
 				title = ((Label) cur.getWidget(0)).getText();
 			}
@@ -125,7 +124,8 @@ public class MedReminder implements EntryPoint {
 				h = ((TextBox) tp.getWidget(0)).getText();
 				m = ((TextBox) tp.getWidget(2)).getText();
 			}
-
+			
+			Window.alert("adding a new message: "+title+txt+dayVal+h+m);
 			data.add(new Message(title, txt, dayVal, h + ":" + m));
 		}
 
@@ -296,11 +296,11 @@ public class MedReminder implements EntryPoint {
 					@Override
 					public void onSuccess(ArrayList<Message> messages) {
 						individualPanel.remove(packagePanel);
-						messagePanel.clear();
 						packagePanel.clear();
+						messagePanel.clear();
 						// templateString = result;
 						for (Message msg : messages) {
-							Window.alert("Adding a message: "+msg.title);
+							Window.alert("Adding a message: "+msg.time);
 							// replace text logic
 							String text = msg.text.replaceAll("[value]", "");
 							//
@@ -308,14 +308,16 @@ public class MedReminder implements EntryPoint {
 							box.setText(text);
 							box.setAlignment(TextAlignment.JUSTIFY);
 							String[] time = msg.time.split(":");
-
+							
 							TextBox hour = new TextBox();
 							hour.setWidth("15px");
 							hour.setMaxLength(2);
-
+							hour.setText(time[0]);
+							
 							TextBox minute = new TextBox();
 							minute.setWidth("15px");
 							minute.setMaxLength(2);
+							minute.setText(time[1]);
 
 							Label delimeter = new Label(":");
 							delimeter.setWidth("8px");
@@ -327,15 +329,19 @@ public class MedReminder implements EntryPoint {
 							timePane.add(hour);
 							timePane.add(delimeter);
 							timePane.add(minute);
-
-							messagePanel.add(new Label("" + msg.title));
-							messagePanel.add(box);
-							messagePanel.add(new Label("Day: " + msg.day));
-							messagePanel.add(timePane);
-							packagePanel.add(messagePanel);
-							individualPanel.add(packagePanel);
+							VerticalPanel vp = new VerticalPanel();
+							vp.add(new Label("" + msg.title));
+							vp.add(box);
+							vp.add(new Label("Day: " + msg.day));
+							vp.add(timePane);
+							
+							messagePanel.add(vp);
+							
 						}
-
+						for(VerticalPanel p:messagePanel){
+							packagePanel.add(p);
+						}
+						individualPanel.add(packagePanel);
 					}
 
 				});
