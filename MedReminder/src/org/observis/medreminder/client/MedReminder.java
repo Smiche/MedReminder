@@ -442,6 +442,9 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onSuccess(String result) {
+				packageHolder.clear();
+				packagesListPanel.clear();
+				
 				String[] packageArr = result.split(",");
 				List<String> packages = Arrays.asList(packageArr);
 				TextCell packageCell = new TextCell();
@@ -455,15 +458,22 @@ public class MedReminder implements EntryPoint {
 							public void onSelectionChange(SelectionChangeEvent event) {
 								String selected = selectionModel.getSelectedObject();
 								if (selected != null) {
-									// Window.alert("You selected: " + selected);
-									selectedPatient = selected;
-									updateMiddlePanel();
+									Window.alert("You selected: " + selected);
+									//selectedPatient = selected;
+									//updateMiddlePanel();
 								}
 							}
 						});
 				// Window.alert("Size:"+patients.size());
+				//Button add
+				
 				packagesCellList.setRowCount(packages.size(), true);
-				packagesCellList.setRowData(0, packages);				
+				packagesCellList.setRowData(0, packages);		
+				
+				
+				
+				packagesListPanel.add(packagesCellList);
+				packageHolder.add(packagesListPanel);
 			}
 			
 		});
@@ -508,7 +518,7 @@ public class MedReminder implements EntryPoint {
 		};
 		
 		bar.addItem("Patients",issuePatientsCommand);
-		bar.addItem("Templates",issueTemplatesCommand);
+		bar.addItem("Packages",issueTemplatesCommand);
 		bar.addItem("Logout", issueLogout);
 
 		// main screen
