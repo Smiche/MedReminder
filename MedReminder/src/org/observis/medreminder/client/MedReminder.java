@@ -506,14 +506,12 @@ public class MedReminder implements EntryPoint {
 					@Override
 					public void onSuccess(ArrayList<Message> messages) {
 						//individualPanel.remove(packagePanel);
-						Window.alert("Loading: "+selectedPackage+ " Size is: "+messages.size());
 						packagesMiddlePanel.clear();
 						packagesMiddlePanel.add(createMessage);
 						messagesMiddlePanel.clear();
 						
 						// templateString = result;
 						for (Message msg : messages) {
-							Window.alert(msg.text);
 							// replace text logic
 							String text = msg.text;
 							//
@@ -542,17 +540,49 @@ public class MedReminder implements EntryPoint {
 							timePane.add(hour);
 							timePane.add(delimeter);
 							timePane.add(minute);
+							
+							Button removeButton = new Button("Remove");
+							removeButton.addClickHandler(new ClickHandler(){
+
+								@Override
+								public void onClick(ClickEvent event) {
+									Button cur = (Button) event.getSource();
+									
+									VerticalPanel mp = (VerticalPanel) cur.getParent();
+									Label lab = (Label)mp.getWidget(0);
+									
+									String titleToDelete = lab.getText();
+									TextBox lab2 = (TextBox)mp.getWidget(1);
+									String textToDelete = lab2.getText();
+									comService.removeMessage(titleToDelete, textToDelete, new AsyncCallback<Void>(){
+
+										@Override
+										public void onFailure(Throwable caught) {
+											// TODO Auto-generated method stub
+											
+										}
+
+										@Override
+										public void onSuccess(Void result) {
+											loadEditablePackage(selectedPackage);
+										}
+										
+									});
+								}
+								
+							});
+							
 							VerticalPanel vp = new VerticalPanel();
 							vp.add(new Label("" + msg.title));
 							vp.add(box);
 							vp.add(new Label("Day: " + msg.day));
 							vp.add(timePane);
+							vp.add(removeButton);
 							
 							messagesMiddlePanel.add(vp);
 							
 						}
 						for(VerticalPanel p:messagesMiddlePanel){
-							Window.alert("inserting a message");
 							packagesMiddlePanel.add(p);
 						}
 						packageHolder.add(packagesMiddlePanel);
