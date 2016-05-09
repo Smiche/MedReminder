@@ -300,6 +300,7 @@ public class MedReminder implements EntryPoint {
 						packagePanel.clear();
 						// templateString = result;
 						for (Message msg : messages) {
+							Window.alert("Adding a message: "+msg.title);
 							// replace text logic
 							String text = msg.text.replaceAll("[value]", "");
 							//
