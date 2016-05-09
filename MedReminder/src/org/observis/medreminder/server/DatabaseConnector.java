@@ -258,8 +258,16 @@ public class DatabaseConnector {
 			while (rs.next()) {
 				patient_id = rs.getString("number");
 			}
-			rs = stmt.executeQuery(sqlInsert);
 
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			stmt = conn.createStatement();
+			stmt.execute(sqlInsert);
+		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -318,7 +326,7 @@ public class DatabaseConnector {
 		String sqlInsert = "INSERT INTO packages ('"+title+"')";
 		try {
 			stmt = conn.createStatement();
-			stmt.executeQuery(sqlInsert);
+			stmt.execute(sqlInsert);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -337,7 +345,14 @@ public class DatabaseConnector {
 			while(rs.next()){
 				package_id = rs.getString("id");
 			}
-			stmt.executeQuery(sqlInsert);
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			stmt = conn.createStatement();
+			stmt.execute(sqlInsert);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
