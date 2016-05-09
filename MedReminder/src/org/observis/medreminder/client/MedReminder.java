@@ -339,7 +339,6 @@ public class MedReminder implements EntryPoint {
 				messageDayBox.setText("");
 				messageHourBox.setText("");
 				messageMinuteBox.setText("");
-				
 			}
 
 		});
