@@ -291,7 +291,9 @@ public class MedReminder implements EntryPoint {
 		dialogVPanel.add(new HTML("<b>*Day:</b>"));
 		dialogVPanel.add(messageDayBox);
 		dialogVPanel.add(new HTML("<b>*Time:</b>"));
+		dialogVPanel.add(new HTML("Hour"));
 		dialogVPanel.add(messageHourBox);
+		dialogVPanel.add(new HTML("Minute"));
 		dialogVPanel.add(messageMinuteBox);
 		
 		
