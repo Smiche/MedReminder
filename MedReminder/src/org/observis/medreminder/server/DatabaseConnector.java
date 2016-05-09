@@ -295,16 +295,14 @@ public class DatabaseConnector {
 	}
 
 	public static ArrayList<Message> getSinglePackage(String title) {
-		System.out.println("Requesting a single package: "+title);
+	
 		ArrayList<Message> messageList = new ArrayList<Message>();
-		messageList.add(new Message("title", "text", "time", "day"));
 		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day, messages.text FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"'";
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
 			while (rs.next()) {
-				System.out.println(rs.getString("title")+"-"+rs.getString("text")+"-"+rs.getString("time")+"-"+rs.getString("day"));
 				messageList.add(new Message(rs.getString("title"),rs.getString("text"),rs.getString("time"),rs.getString("day")));
 			}
 
@@ -313,5 +311,10 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 		return messageList;
+	}
+	
+	public static void addPackagetoDB(String title){
+		
+		String sqlInsert = "INSERT title INRO packages ";
 	}
 }
