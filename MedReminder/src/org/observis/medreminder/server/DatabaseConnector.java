@@ -290,7 +290,7 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String sqlInsert = "INSERT INTO messages(title,text,time,day,package_id) WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
+		String sqlInsert = "INSERT INTO messages(title,text,time,day,package_id) VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
 		try {
 			stmt = conn.createStatement();
 			stmt.execute(sqlInsert);
