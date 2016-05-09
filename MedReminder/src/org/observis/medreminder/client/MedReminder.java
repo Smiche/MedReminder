@@ -67,14 +67,23 @@ public class MedReminder implements EntryPoint {
 	
 	
 	private Button addPatient = new Button("Add");
+	private Button createMessage = new Button("Add");
 	private TextBox phoneBox = new TextBox();
+	//used when creating new entries(used in dialog boxes)
 	private TextBox packageNameBox = new TextBox();
 	private TextBox patientNameBox = new TextBox();
+	private TextBox messageTitleBox = new TextBox();
+	private TextBox messageTextBox = new TextBox();
+	private TextBox messageHourBox = new TextBox();
+	private TextBox messageMinuteBox = new TextBox();
+	private TextBox messageDayBox = new TextBox();
 
 	private VerticalPanel patientsPanel = new VerticalPanel();
 	private ListBox packagesList = new ListBox();
 	private DialogBox addPatientBox = new DialogBox();
 	private DialogBox addPackageBox = new DialogBox();
+	private DialogBox createMessageBox = new DialogBox();
+	
 	private VerticalPanel packagesListPanel = new VerticalPanel();
 	private VerticalPanel packagesMiddlePanel = new VerticalPanel();
 	private ArrayList<VerticalPanel> messagesMiddlePanel = new ArrayList<VerticalPanel>();
@@ -257,8 +266,84 @@ public class MedReminder implements EntryPoint {
 			}
 
 		});
+	}
+	
+	private void createMessagePopup(){
+		// Create the popup dialog box
+		createMessageBox.setText("Add a message.");
+		createMessageBox.setAnimationEnabled(true);
+		final Button closeButton = new Button("Close");
+		final Button addClick = new Button("Add");
+		// We can set the id of a widget by accessing its Element
+		closeButton.getElement().setId("closeButton");
+		VerticalPanel dialogVPanel = new VerticalPanel();
+		messageTitleBox.setText("");
+		messageTextBox.setText("");
+		messageDayBox.setText("");
+		messageHourBox.setText("");
+		messageMinuteBox.setText("");
+		
+		dialogVPanel.addStyleName("dialogVPanel");
+		dialogVPanel.add(new HTML("<b>*Title:</b>"));
+		dialogVPanel.add(messageTitleBox);
+		dialogVPanel.add(new HTML("<b>*Text:</b>"));
+		dialogVPanel.add(messageTextBox);
+		dialogVPanel.add(new HTML("<b>*Day:</b>"));
+		dialogVPanel.add(messageDayBox);
+		dialogVPanel.add(new HTML("<b>*Time:</b>"));
+		dialogVPanel.add(messageHourBox);
+		dialogVPanel.add(messageMinuteBox);
+		
+		
+		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		dialogVPanel.add(addClick);
+		dialogVPanel.add(closeButton);
+		createMessageBox.setWidget(dialogVPanel);
+		createMessageBox.center();
+		// Add a handler to close the DialogBox
+		closeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				addPackageBox.hide();
+				messageTitleBox.setText("");
+				messageTextBox.setText("");
+				messageDayBox.setText("");
+				messageHourBox.setText("");
+				messageMinuteBox.setText("");
+			}
+		});
+		addClick.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Message m = new Message(messageTitleBox.getText(), messageTextBox.getText(), messageHourBox.getText()+":"+messageMinuteBox.getText(), messageDayBox.getText());
+				
+				comService.addMessage(m,selectedPackage, new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("Failure");
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+								//initPackageHolder();
+								updatePackageHolderMiddle();
+							}
+
+						});
+				createMessageBox.hide();
+				messageTitleBox.setText("");
+				messageTextBox.setText("");
+				messageDayBox.setText("");
+				messageHourBox.setText("");
+				messageMinuteBox.setText("");
+				
+			}
+
+		});
 		
 	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadPatients() {
 		comService.getPatients(new AsyncCallback() {
@@ -421,10 +506,12 @@ public class MedReminder implements EntryPoint {
 						//individualPanel.remove(packagePanel);
 						Window.alert("Loading: "+selectedPackage+ " Size is: "+messages.size());
 						packagesMiddlePanel.clear();
+						packagesMiddlePanel.add(createMessage);
 						messagesMiddlePanel.clear();
-						messagePanel.clear();
+						
 						// templateString = result;
 						for (Message msg : messages) {
+							Window.alert(msg.text);
 							// replace text logic
 							String text = msg.text;
 							//
@@ -459,12 +546,14 @@ public class MedReminder implements EntryPoint {
 							vp.add(new Label("Day: " + msg.day));
 							vp.add(timePane);
 							
-							packagesMiddlePanel.add(vp);
+							messagesMiddlePanel.add(vp);
 							
 						}
-						for(VerticalPanel p:messagePanel){
-							packageHolder.add(p);
+						for(VerticalPanel p:messagesMiddlePanel){
+							Window.alert("inserting a message");
+							packagesMiddlePanel.add(p);
 						}
+						packageHolder.add(packagesMiddlePanel);
 					}
 
 				});
@@ -623,6 +712,15 @@ public class MedReminder implements EntryPoint {
 	public void onModuleLoad() {
 		initPackageHolder();
 		
+		createMessage.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				createMessagePopup();				
+			}
+			
+		});
+		
 		packagesList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
@@ -704,6 +802,7 @@ public class MedReminder implements EntryPoint {
 		dialogVPanel.add(closeButton);
 		dialogBox.setWidget(dialogVPanel);
 
+		
 		// Add a handler to close the DialogBox
 		closeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
