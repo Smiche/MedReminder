@@ -441,7 +441,7 @@ public class MedReminder implements EntryPoint {
 			public void onSuccess(String result) {
 				String[] list = result.split(",") ;
 				for(String item:list){
-					packagesListPanel.add();
+					//packagesListPanel.add();
 				}
 			}
 			
