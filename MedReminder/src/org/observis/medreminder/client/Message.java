@@ -1,5 +1,7 @@
 package org.observis.medreminder.client;
 
+import java.util.ArrayList;
+
 public class Message {
 	public String title;
 	public String text;
@@ -10,7 +12,7 @@ public class Message {
 		this.title = title;
 		this.text = text;
 		this.time = time;
-		this.day = day;
+		this.day = day;		
 	}
 	
 }

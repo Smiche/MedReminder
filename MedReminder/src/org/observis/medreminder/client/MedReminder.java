@@ -335,8 +335,6 @@ public class MedReminder implements EntryPoint {
 							individualPanel.add(packagePanel);
 						}
 
-						// String patientLabelString = ((Label)
-						// individualPanel.getWidget(0)).getText();
 					}
 
 				});
