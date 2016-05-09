@@ -10,7 +10,7 @@ public class Delivery implements Serializable{
 	public String text = "";
 	public String date = "";
 	public String time = "";
-	public Boolean sent = false;
+	public String sent =  "";
 	private static final long serialVersionUID = 1000003333L;
 
 	public Delivery(){
