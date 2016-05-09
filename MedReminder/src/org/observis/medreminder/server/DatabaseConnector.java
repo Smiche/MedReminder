@@ -298,7 +298,7 @@ public class DatabaseConnector {
 		System.out.println("Requesting a single package: "+title);
 		ArrayList<Message> messageList = new ArrayList<Message>();
 		messageList.add(new Message("title", "text", "time", "day"));
-		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"'";
+		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day, messages.text FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"'";
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
