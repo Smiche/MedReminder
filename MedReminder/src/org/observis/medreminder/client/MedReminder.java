@@ -505,6 +505,7 @@ public class MedReminder implements EntryPoint {
 					@Override
 					public void onSuccess(ArrayList<Message> messages) {
 						//individualPanel.remove(packagePanel);
+						
 						packagesMiddlePanel.clear();
 						packagesMiddlePanel.add(createMessage);
 						messagesMiddlePanel.clear();
@@ -512,6 +513,7 @@ public class MedReminder implements EntryPoint {
 						// templateString = result;
 						if(!messages.isEmpty())
 						for (Message msg : messages) {
+							if(msg.text == null) break;
 							// replace text logic
 							String text = msg.text;
 							//
