@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.observis.medreminder.client.Delivery;
 import org.observis.medreminder.client.Message;
 
 public class DatabaseConnector {
@@ -415,5 +416,34 @@ public class DatabaseConnector {
 		}
 		closeConnection();
 		
+	}
+	public static ArrayList<Delivery> returnDeliveryDB(String phone){
+		openConnection();
+		ArrayList<Delivery> deliveryList = new ArrayList<Delivery>();
+		String sqlGetid = "SELECT patient_id FROM patients WHERE number = '"+phone+"'";
+		String patient_id = "";
+		String sqlSelect = "SELECT  text, date, time, sent FROM delivery WHERE patient_id = '"+patient_id+"'";
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			stmt.execute(sqlGetid);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelect);
+			while(rs.next()){
+				deliveryList.add(new Delivery(phone, rs.getString("text"),rs.getString("date"),rs.getString("time"),rs.getString("sent")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		closeConnection();
+		return deliveryList;
 	}
 }
