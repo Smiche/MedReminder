@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.observis.medreminder.client.Delivery;
 import org.observis.medreminder.client.Message;
 
 public class DatabaseConnector {
@@ -77,7 +78,7 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 
-		String getNumbers = "SELECT number FROM patients WHERE doctor_id LIKE '" + doctorID + "'";
+		String getNumbers = "SELECT number FROM patients WHERE doctor_id LIKE '" + doctorID + "' ORDER BY number";
 
 		try {
 			rs = stmt.executeQuery(getNumbers);
@@ -169,74 +170,7 @@ public class DatabaseConnector {
 		return null;
 	}
 
-	public static void addTemplateRecord(String text, String days, String time, String duration, String description) {
-		// inserting a template record to the db
-		openConnection();
-		String sqlQuery = "INSERT INTO templates( `text`, `days`, `time`, `duration`, `template_descr`) VALUES ('"
-				+ text + "','" + days + "','" + time + "','" + duration + "','" + description + "')";
-		try {
 
-			stmt = conn.createStatement();
-
-			stmt.execute(sqlQuery);
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		closeConnection();
-
-	}
-
-	public static String[] getTemplateRecord(String description) {
-		openConnection();
-		String sqlQuery = "SELECT * FROM templates WHERE template_desc LIKE '" + description + "'";
-		String[] templateRecord = new String[5];
-		ResultSet rs = null;
-		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
-			while (rs.next()) {
-				templateRecord[0] = rs.getString("text");
-				templateRecord[1] = rs.getString("days");
-				templateRecord[2] = rs.getString("time");
-				templateRecord[3] = rs.getString("duration");
-				templateRecord[4] = rs.getString("template_desc");
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		closeConnection();
-		return templateRecord;
-
-	}
-
-	public static String getTemplatesList() {
-		openConnection();
-		String templateList = "";
-		String sqlQuery = "SELECT template_desc FROM templates";
-		ResultSet rs = null;
-		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
-			while (rs.next()) {
-				// System.out.println(rs.getString("template_desc"));
-				if (templateList.length() < 2) {
-					templateList += rs.getString("template_desc");
-				} else {
-					templateList += "," + rs.getString("template_desc");
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		closeConnection();
-		return templateList;
-	}
 
 	public static void insertSchedule(Message msg, String patientPhone) {
 		openConnection();
@@ -284,7 +218,7 @@ public class DatabaseConnector {
 	public static String getPackagesDB() {
 		openConnection();
 		String packageList = "";
-		String sqlQuery = "SELECT title FROM packages";
+		String sqlQuery = "SELECT title FROM packages ORDER BY title";
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
@@ -308,7 +242,7 @@ public class DatabaseConnector {
 	public static ArrayList<Message> getSinglePackage(String title) {
 		openConnection();
 		ArrayList<Message> messageList = new ArrayList<Message>();
-		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day, messages.text FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"'";
+		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day, messages.text FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"' ORDER BY day, time";
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
@@ -341,9 +275,9 @@ public class DatabaseConnector {
 	}
 	public static void addMessagetoDB(Message msg, String package_title){
 		openConnection();
+		String package_id = "";
 		String sqlSelect = "SELECT id FROM packages WHERE title LIKE '"+package_title+"'";
 		ResultSet rs = null;
-		String package_id = "";
 		String sqlInsert = "INSERT INTO messages(title,text,time,day,package_id) WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
 		try {
 			stmt = conn.createStatement();
@@ -390,5 +324,59 @@ public class DatabaseConnector {
 		closeConnection();
 		
 	}
+	public static void updateMessageDB (String oldTitle, String newTitle, String newText, String newTime, String newDay){
+		openConnection();
+		String sqlUpdate = "UPDATE messages SET title='"+newTitle+"',text='"+newText+"', time ='"+newTime+"', day ='"+newDay+"' WHERE title LIKE '"+oldTitle+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlUpdate);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+	}
 	
+	public static void updatePackageDB (String oldTitle, String newTitle) {
+		openConnection();
+		String sqlUpdate = "UPDATE packages SET title='"+newTitle+"' WHERE title LIKE '"+oldTitle+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlUpdate);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+		
+	}
+	public static ArrayList<Delivery> returnDeliveryDB(String phone){
+		openConnection();
+		ArrayList<Delivery> deliveryList = new ArrayList<Delivery>();
+		String sqlGetid = "SELECT patient_id FROM patients WHERE number = '"+phone+"'";
+		String patient_id = "";
+		String sqlSelect = "SELECT  text, date, time, sent FROM delivery WHERE patient_id = '"+patient_id+"' SORT BY date, time";
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			stmt.execute(sqlGetid);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelect);
+			while(rs.next()){
+				deliveryList.add(new Delivery(phone, rs.getString("text"),rs.getString("date"),rs.getString("time"),rs.getString("sent")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		closeConnection();
+		return deliveryList;
+	}
 }

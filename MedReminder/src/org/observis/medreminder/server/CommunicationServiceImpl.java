@@ -114,7 +114,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void removePackage(String title) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		DatabaseConnector.removePackageDB(title);
+		
 	}
 
 }
