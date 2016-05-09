@@ -20,6 +20,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -113,8 +114,10 @@ public class MedReminder implements EntryPoint {
 				txt = ((TextBox) cur.getWidget(1)).getText();
 			}
 			txt.replaceAll("[value]", medValue);
-			if (cur.getWidget(2) instanceof TextBox) {
-				dayVal = ((TextBox) cur.getWidget(2)).getText();
+			if (cur.getWidget(2) instanceof Label) {
+				//Window.alert(((Label) cur.getWidget(2)).getText());
+				dayVal = ((Label) cur.getWidget(2)).getText();
+				dayVal = dayVal.replaceAll("Day: ", "");
 			}
 			if (cur.getWidget(3) instanceof HorizontalPanel) {
 				tp = (HorizontalPanel) cur.getWidget(3);
@@ -125,8 +128,8 @@ public class MedReminder implements EntryPoint {
 				m = ((TextBox) tp.getWidget(2)).getText();
 			}
 			
-			Window.alert("adding a new message: "+title+txt+dayVal+h+m);
-			data.add(new Message(title, txt, dayVal, h + ":" + m));
+			Window.alert("adding a new message: "+title+txt+" Day is: "+dayVal+" - "+h+m);
+			data.add(new Message(title, txt, h+":"+m, dayVal));
 		}
 
 		comService.scheduleMessages(data, selectedPatient,

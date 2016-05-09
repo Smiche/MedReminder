@@ -234,36 +234,46 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		closeConnection();
 		return templateList;
 	}
 
 	public static void insertSchedule(Message msg, String patientPhone) {
+		openConnection();
+		System.out.println("trying to insert a schedule to db");
 		Date curDate = new Date();
 		Calendar curCal = Calendar.getInstance();
+		System.out.println("Date, calendar set, day is: "+msg.day);
+		
+		System.out.println("Day is: "+Integer.parseInt(msg.day));
 		curCal.setTime(curDate);
 		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
-		ResultSet rs = null;
+		System.out.println("Date acquired");
+		ResultSet rs;
 		String sqlSelect = "SELECT patient_id FROM patients WHERE number LIKE '" + patientPhone + "'";
 		String patient_id = "";
 		String day = "" + curCal.get(Calendar.DAY_OF_MONTH);
 		String month = "" + (curCal.get(Calendar.MONTH) + 1);
 		String year = "" + curCal.get(Calendar.YEAR);
+		System.out.println("Current year is: "+curCal.get(Calendar.YEAR));
 		String date = day + "-" + month + "-" + year;
-		String sqlInsert = "INSERT INTO delivery ('patient_id', 'text', 'date', 'time', 'sent') VALUES ('" + patient_id
-				+ "', '" + msg.text + "', '" + date + "', '" + msg.time + "', '0') ";
-
+		System.out.println("Attempting to get patient ID");
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
 			while (rs.next()) {
 				patient_id = rs.getString("patient_id");
 			}
-
-
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}		
+		
+		System.out.println("Patient ID is: "+patient_id);
+		String sqlInsert = "INSERT INTO `delivery`(patient_id, text, date, time, sent) VALUES ('" + patient_id
+				+ "', '" + msg.text + "', '" + date + "', '" + msg.time + "', '0') ";
+		
 		try {
 			stmt = conn.createStatement();
 			stmt.execute(sqlInsert);
@@ -272,10 +282,12 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("Succesfully inserted?");
 		// Insert into db delivery -> delivered -> false, phone -> patientPhone,
 		// text -> msg.text time -> msg.time, patient_id -> from patient phone
 		// with query
 		// date -> cal.get(Calendar.DAY or DATE or DATE_OF_YEAR + YEAR..
+		closeConnection();
 
 	}
 
@@ -298,12 +310,13 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		closeConnection();
 		return packageList;
 
 	}
 
 	public static ArrayList<Message> getSinglePackage(String title) {
-	
+		openConnection();
 		ArrayList<Message> messageList = new ArrayList<Message>();
 		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day, messages.text FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"'";
 		ResultSet rs = null;
@@ -318,12 +331,13 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		closeConnection();
 		return messageList;
 	}
 	
 	public static void addPackagetoDB(String title){
-		
-		String sqlInsert = "INSERT INTO packages ('title') VALUES ('"+title+"')";
+		openConnection();
+		String sqlInsert = "INSERT INTO packages (title) VALUES ('"+title+"')";
 		try {
 			stmt = conn.createStatement();
 			stmt.execute(sqlInsert);
@@ -332,13 +346,15 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		closeConnection();
 	
 	}
 	public static void addMessagetoDB(Message msg, String package_title){
+		openConnection();
 		String sqlSelect = "SELECT id FROM packages WHERE title LIKE '"+package_title+"'";
 		ResultSet rs = null;
 		String package_id = "";
-		String sqlInsert = "INSERT INTO messages('title','text','time','day','package_id') WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
+		String sqlInsert = "INSERT INTO messages(title,text,time,day,package_id) WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
@@ -357,6 +373,6 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		closeConnection();
 	}
 }

@@ -76,8 +76,10 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	public String scheduleMessages(ArrayList<Message> messages,
 			String patientPhone) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
+		System.out.println("Array size: "+messages.size());
 		int success = 0;
 		for(Message m:messages){
+			System.out.println("inserting message info: "+m.title+" phone is:"+patientPhone);
 			DatabaseConnector.insertSchedule(m, patientPhone);
 			success++;
 		}
