@@ -243,20 +243,20 @@ public class DatabaseConnector {
 		curCal.setTime(curDate);
 		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
 		ResultSet rs = null;
-		String sqlSelect = "SELECT patient_id WHERE number LIKE '" + patientPhone + "'";
+		String sqlSelect = "SELECT patient_id FROM patients WHERE number LIKE '" + patientPhone + "'";
 		String patient_id = "";
 		String day = "" + curCal.get(Calendar.DAY_OF_MONTH);
 		String month = "" + (curCal.get(Calendar.MONTH) + 1);
 		String year = "" + curCal.get(Calendar.YEAR);
 		String date = day + "-" + month + "-" + year;
-		String sqlInsert = "INSERT INTO delivery ('patient_id', 'text', 'date', 'time', 'sent' VALUES '" + patient_id
-				+ "', '" + msg.text + "', '" + date + "', '" + msg.time + "', '0' ";
+		String sqlInsert = "INSERT INTO delivery ('patient_id', 'text', 'date', 'time', 'sent') VALUES ('" + patient_id
+				+ "', '" + msg.text + "', '" + date + "', '" + msg.time + "', '0') ";
 
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
 			while (rs.next()) {
-				patient_id = rs.getString("number");
+				patient_id = rs.getString("patient_id");
 			}
 
 
@@ -323,7 +323,7 @@ public class DatabaseConnector {
 	
 	public static void addPackagetoDB(String title){
 		
-		String sqlInsert = "INSERT INTO packages ('"+title+"')";
+		String sqlInsert = "INSERT INTO packages ('title') VALUES ('"+title+"')";
 		try {
 			stmt = conn.createStatement();
 			stmt.execute(sqlInsert);
@@ -338,7 +338,7 @@ public class DatabaseConnector {
 		String sqlSelect = "SELECT id FROM packages WHERE title LIKE '"+package_title+"'";
 		ResultSet rs = null;
 		String package_id = "";
-		String sqlInsert = "INSERT INTO messages WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
+		String sqlInsert = "INSERT INTO messages('title','text','time','day','package_id') WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
