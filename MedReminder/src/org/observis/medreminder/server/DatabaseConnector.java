@@ -365,4 +365,30 @@ public class DatabaseConnector {
 		}
 		closeConnection();
 	}
+	public static void removeMessageDB (String title, String text){
+		openConnection();
+		String sqlRemove = "DELETE FROM messages WHERE title = '"+title+"' AND text = '"+text+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlRemove);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+		}
+	public static void removePackageDB (String title){
+		openConnection();
+		String sqlRemove = "DELETE FROM packages WHERE title = '"+title+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlRemove);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+		
+	}
+	
 }
