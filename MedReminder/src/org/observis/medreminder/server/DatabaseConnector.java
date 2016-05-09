@@ -275,9 +275,9 @@ public class DatabaseConnector {
 	}
 	public static void addMessagetoDB(Message msg, String package_title){
 		openConnection();
+		String package_id = "";
 		String sqlSelect = "SELECT id FROM packages WHERE title LIKE '"+package_title+"'";
 		ResultSet rs = null;
-		String package_id = "";
 		String sqlInsert = "INSERT INTO messages(title,text,time,day,package_id) WHERE package_id LIKE '"+package_id+"' VALUES ('"+msg.title+"', '"+msg.text+", '"+msg.time+"','"+msg.day+"','"+package_id+"')";
 		try {
 			stmt = conn.createStatement();
