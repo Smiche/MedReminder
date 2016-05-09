@@ -390,5 +390,30 @@ public class DatabaseConnector {
 		closeConnection();
 		
 	}
+	public static void updateMessageDB (String oldTitle, String newTitle, String newText, String newTime, String newDay){
+		openConnection();
+		String sqlUpdate = "UPDATE messages SET title='"+newTitle+"',text='"+newText+"', time ='"+newTime+"', day ='"+newDay+"' WHERE title LIKE '"+oldTitle+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlUpdate);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+	}
 	
+	public static void updatePackageDB (String oldTitle, String newTitle) {
+		openConnection();
+		String sqlUpdate = "UPDATE packages SET title='"+newTitle+"' WHERE title LIKE '"+oldTitle+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlUpdate);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+		
+	}
 }
