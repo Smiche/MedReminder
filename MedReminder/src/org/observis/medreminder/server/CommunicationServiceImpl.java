@@ -76,10 +76,11 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public String getPackagesList() throws IllegalArgumentException {
 
+
 		// need to change to getPackagesList
 		// return DatabaseConnector.getTemplatesList();
 		//
-		return null;
+		return DatabaseConnector.getPackagesDB();
 	}
 
 	@Override
