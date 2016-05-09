@@ -50,7 +50,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 			throws IllegalArgumentException {
 
 		// array list to return all messages
-		return null;
+		return DatabaseConnector.getSinglePackage(description);
 		// hook to db connector
 
 		// return in format:
