@@ -242,7 +242,7 @@ public class DatabaseConnector {
 	public static ArrayList<Message> getSinglePackage(String title) {
 		openConnection();
 		ArrayList<Message> messageList = new ArrayList<Message>();
-		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day, messages.text FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"'";
+		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day, messages.text FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"' ORDER BY day, time";
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
@@ -355,7 +355,7 @@ public class DatabaseConnector {
 		ArrayList<Delivery> deliveryList = new ArrayList<Delivery>();
 		String sqlGetid = "SELECT patient_id FROM patients WHERE number = '"+phone+"'";
 		String patient_id = "";
-		String sqlSelect = "SELECT  text, date, time, sent FROM delivery WHERE patient_id = '"+patient_id+"'";
+		String sqlSelect = "SELECT  text, date, time, sent FROM delivery WHERE patient_id = '"+patient_id+"' SORT BY date, time";
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
