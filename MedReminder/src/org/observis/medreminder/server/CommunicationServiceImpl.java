@@ -33,17 +33,6 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	// client adding template to server
-	public void addTemplate(String text, String weekDays, String time,
-			String duration, String description)
-			throws IllegalArgumentException {
-		DatabaseConnector.addTemplateRecord(text, weekDays, time, duration,
-				description);
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public String getPatients() throws IllegalArgumentException {
 
 		HttpServletRequest httpServletRequest = this.getThreadLocalRequest();
@@ -94,6 +83,20 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 		}
 		// scheduling logic from the arraylist
 		return ""+success;
+	}
+
+	@Override
+	public void addPackage(String name) throws IllegalArgumentException {
+		// add a new package to the database with that title ->name
+		
+	}
+
+	@Override
+	public void addMessage(Message msg, String packageName)
+			throws IllegalArgumentException {
+		//add a new message to table messages
+		//use packageName to get foreign  package_id
+		
 	}
 
 }
