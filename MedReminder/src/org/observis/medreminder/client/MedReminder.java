@@ -68,13 +68,17 @@ public class MedReminder implements EntryPoint {
 	
 	private Button addPatient = new Button("Add");
 	private TextBox phoneBox = new TextBox();
+	private TextBox packageNameBox = new TextBox();
 	private TextBox patientNameBox = new TextBox();
 
 	private VerticalPanel patientsPanel = new VerticalPanel();
 	private ListBox packagesList = new ListBox();
 	private DialogBox addPatientBox = new DialogBox();
+	private DialogBox addPackageBox = new DialogBox();
 	private VerticalPanel packagesListPanel = new VerticalPanel();
-
+	private VerticalPanel packagesMiddlePanel = new VerticalPanel();
+	private ArrayList<VerticalPanel> messagesMiddlePanel = new ArrayList<VerticalPanel>();
+	
 	private String[] patientString;
 	private String[] packagesListString;
 	private DialogBox popupPanel = new DialogBox();
@@ -205,6 +209,54 @@ public class MedReminder implements EntryPoint {
 	}
 
 	private void addPackagePopup(){
+		// Create the popup dialog box
+		addPackageBox.setText("Add a package.");
+		addPackageBox.setAnimationEnabled(true);
+		final Button closeButton = new Button("Close");
+		final Button addClick = new Button("Add");
+		// We can set the id of a widget by accessing its Element
+		closeButton.getElement().setId("closeButton");
+		VerticalPanel dialogVPanel = new VerticalPanel();
+		packageNameBox.setText("");
+
+		dialogVPanel.addStyleName("dialogVPanel");
+		dialogVPanel.add(new HTML("<b>*Package name:</b>"));
+		dialogVPanel.add(packageNameBox);
+		
+		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		dialogVPanel.add(addClick);
+		dialogVPanel.add(closeButton);
+		addPackageBox.setWidget(dialogVPanel);
+		addPackageBox.center();
+		// Add a handler to close the DialogBox
+		closeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				addPackageBox.hide();
+				packageNameBox.setText("+358");
+			}
+		});
+		addClick.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				comService.addPackage(packageNameBox.getText(), new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("Failure");
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+								initPackageHolder();
+							}
+
+						});
+				addPackageBox.hide();
+				packageNameBox.setText("");
+			}
+
+		});
 		
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -411,6 +463,9 @@ public class MedReminder implements EntryPoint {
 
 	}
 
+	private void updatePackageHolderMiddle(){
+		
+	}
 	private void clearUI() {
 		patientsPanel.clear();
 		individualPanel.clear();
@@ -477,7 +532,7 @@ public class MedReminder implements EntryPoint {
 								if (selected != null) {
 									Window.alert("You selected: " + selected);
 									selectedPackage = selected;
-									//updateMiddlePanel();
+									updatePackageHolderMiddle();
 								}
 							}
 						});
