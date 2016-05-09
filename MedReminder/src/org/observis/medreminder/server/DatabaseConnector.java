@@ -258,9 +258,32 @@ public class DatabaseConnector {
 		Calendar curCal = Calendar.getInstance();
 		curCal.setTime(curDate);
 		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
-
+		ResultSet rs = null;
+		String sqlSelect = "SELECT patient_id WHERE number LIKE '"+patientPhone+"'";
+		String patient_id = "";
+		String day =""+curCal.get(Calendar.DAY_OF_MONTH);
+		String month =""+(curCal.get(Calendar.MONTH)+1);
+		String year =""+curCal.get(Calendar.YEAR);
+		String date =day+"-"+month+"-"+year;
+		String sqlInsert = "INSERT INTO delivery ('patient_id', 'text', 'date', 'time', 'sent' VALUES '"+patient_id+"', '"+msg.text+"', '"+date+"', '"+msg.time+"', '0' ";
 		
-		//Insert into db delivery -> delivered -> false, phone -> patientPhone, time -> msg.time,  patient_id -> from patient phone with query
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelect);
+			while (rs.next()) {
+			patient_id = rs.getString("number");
+			System.out.println(patient_id);
+			}
+			rs = stmt.executeQuery(sqlInsert);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
+		
+		//Insert into db delivery -> delivered -> false, phone -> patientPhone, text -> msg.text time -> msg.time,  patient_id -> from patient phone with query
 		// date -> cal.get(Calendar.DAY or DATE or DATE_OF_YEAR + YEAR..
 		
 		

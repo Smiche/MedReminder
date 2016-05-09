@@ -1,5 +1,5 @@
 # Module medreminder
 # RPC service class, partial path of RPC policy file
+org.observis.medreminder.client.CommunicationService, B7576C81685D3D0064795EA30C014566.gwt.rpc
 org.observis.medreminder.client.GreetingService, 407080F78BFD3FD4D8F7159BF475C06E.gwt.rpc
 org.observis.medreminder.client.LoginService, 3D001BA4E5353805A1CBBECB32E6DFC4.gwt.rpc
-org.observis.medreminder.client.CommunicationService, 0A90ADB710CD081BA0C33C82EFFA6359.gwt.rpc
