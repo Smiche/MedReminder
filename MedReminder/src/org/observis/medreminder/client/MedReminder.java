@@ -2,8 +2,6 @@ package org.observis.medreminder.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.cell.client.TextCell;
@@ -16,18 +14,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ButtonBase;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -40,8 +32,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
-import com.google.gwt.user.datepicker.client.DatePicker;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
@@ -69,8 +59,9 @@ public class MedReminder implements EntryPoint {
 	private final CommunicationServiceAsync comService = GWT
 			.create(CommunicationService.class);
 	private boolean loggedIn = false;
-	private HorizontalPanel holder = new HorizontalPanel();
-	private VerticalPanel individualPanel = new VerticalPanel();
+	private HorizontalPanel patientHolder = new HorizontalPanel();
+	private HorizontalPanel packageHolder = new HorizontalPanel();
+	private VerticalPanel individualPanel = new VerticalPanel();	
 
 	private Button addPatient = new Button("Add patient");
 	private TextBox phoneBox = new TextBox();
@@ -79,13 +70,15 @@ public class MedReminder implements EntryPoint {
 	private VerticalPanel patientsPanel = new VerticalPanel();
 	private ListBox packagesList = new ListBox();
 	private DialogBox addPatientBox = new DialogBox();
+	private VerticalPanel packagesListPanel = new VerticalPanel();
 
 	private String[] patientString;
 	private String[] packagesListString;
 	private DialogBox popupPanel = new DialogBox();
 
-	private VerticalPanel packageHolder = new VerticalPanel();
-	private VerticalPanel messageHolder = new VerticalPanel();
+	private VerticalPanel packagePanel = new VerticalPanel();
+	private VerticalPanel messagePanel = new VerticalPanel();
+	private VerticalPanel deliveriesPanel = new VerticalPanel();
 
 	private String medValue = "";
 	private String selectedPatient = "";
@@ -107,10 +100,10 @@ public class MedReminder implements EntryPoint {
 		HorizontalPanel tp = new HorizontalPanel();
 		String h = "", m = "";
 		String title = "";
-
-		for (int i = 0; i < packageHolder.getWidgetCount(); i++) {
-			if (packageHolder.getWidget(i) instanceof VerticalPanel) {
-				cur = (VerticalPanel) packageHolder.getWidget(i);
+		
+		for (int i = 0; i < packagePanel.getWidgetCount(); i++) {
+			if (packagePanel.getWidget(i) instanceof VerticalPanel) {
+				cur = (VerticalPanel) packagePanel.getWidget(i);
 			} else {
 				return;
 			}
@@ -302,9 +295,9 @@ public class MedReminder implements EntryPoint {
 
 					@Override
 					public void onSuccess(ArrayList<Message> messages) {
-						individualPanel.remove(packageHolder);
-						messageHolder.clear();
-						packageHolder.clear();
+						individualPanel.remove(packagePanel);
+						messagePanel.clear();
+						packagePanel.clear();
 						// templateString = result;
 						for (Message msg : messages) {
 							// replace text logic
@@ -334,12 +327,12 @@ public class MedReminder implements EntryPoint {
 							timePane.add(delimeter);
 							timePane.add(minute);
 
-							messageHolder.add(new Label("" + msg.title));
-							messageHolder.add(box);
-							messageHolder.add(new Label("Day: " + msg.day));
-							messageHolder.add(timePane);
-							packageHolder.add(messageHolder);
-							individualPanel.add(packageHolder);
+							messagePanel.add(new Label("" + msg.title));
+							messagePanel.add(box);
+							messagePanel.add(new Label("Day: " + msg.day));
+							messagePanel.add(timePane);
+							packagePanel.add(messagePanel);
+							individualPanel.add(packagePanel);
 						}
 
 						// String patientLabelString = ((Label)
@@ -403,14 +396,14 @@ public class MedReminder implements EntryPoint {
 		individualPanel.add(packagesList);
 		individualPanel.add(submitData);
 
-		holder.insert(individualPanel, 1);
+		patientHolder.insert(individualPanel, 1);
 
 	}
 
 	private void clearUI() {
 		patientsPanel.clear();
 		individualPanel.clear();
-		holder.clear();
+		patientHolder.clear();
 
 	}
 
@@ -427,15 +420,38 @@ public class MedReminder implements EntryPoint {
 
 		updatePatients();
 
-		holder.insert(patientsPanel, 0);
-		holder.insert(individualPanel, 1);
+		patientHolder.insert(patientsPanel, 0);
+		patientHolder.insert(individualPanel, 1);
 
 		RootPanel.get("mainPanel").add(bar);
-		RootPanel.get("mainPanel").add(holder);
+		
+		RootPanel.get("mainPanel").add(patientHolder);
 
 	}
+	
+	private void initPackageHolder(){
+		comService.getPackagesList(new AsyncCallback<String>(){
 
+			@Override
+			public void onFailure(Throwable caught) {
+				showDialog("Failed to get packages!");				
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				String[] list = result.split(",") ;
+				for(String item:list){
+					packagesListPanel.add();
+				}
+			}
+			
+		});
+		
+	}
+	
 	public void onModuleLoad() {
+		initPackageHolder();
+		
 		packagesList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
@@ -451,7 +467,27 @@ public class MedReminder implements EntryPoint {
 			}
 
 		};
+		Command issuePatientsCommand = new Command() {
 
+			@Override
+			public void execute() {
+				RootPanel.get("mainPanel").remove(packageHolder);
+				RootPanel.get("mainPanel").add(patientHolder);
+			}
+
+		};
+		Command issueTemplatesCommand = new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("mainPanel").remove(patientHolder);
+				RootPanel.get("mainPanel").add(packageHolder);				
+			}
+
+		};
+		
+		bar.addItem("Patients",issuePatientsCommand);
+		bar.addItem("Templates",issueTemplatesCommand);
 		bar.addItem("Logout", issueLogout);
 
 		// main screen
