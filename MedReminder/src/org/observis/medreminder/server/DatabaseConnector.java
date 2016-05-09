@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -16,7 +17,7 @@ import org.observis.medreminder.client.Message;
 public class DatabaseConnector {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql://192.168.0.100:3306/patients";
+	static final String DB_URL = "jdbc:mysql://192.168.0.107:3306/patients";
 	static Connection conn = null;
 	static Statement stmt = null;
 	// Database credentials
@@ -64,8 +65,7 @@ public class DatabaseConnector {
 		String resultString = "";
 		try {
 			stmt = conn.createStatement();
-			String doctorSql = "SELECT doctor_id FROM doctors WHERE username LIKE '"
-					+ doctorName + "'";
+			String doctorSql = "SELECT doctor_id FROM doctors WHERE username LIKE '" + doctorName + "'";
 			// get doctor_id from doctors database to find patients numbers for
 			// this exact doctor
 			rs = stmt.executeQuery(doctorSql);
@@ -77,8 +77,7 @@ public class DatabaseConnector {
 			e.printStackTrace();
 		}
 
-		String getNumbers = "SELECT number FROM patients WHERE doctor_id LIKE '"
-				+ doctorID + "'";
+		String getNumbers = "SELECT number FROM patients WHERE doctor_id LIKE '" + doctorID + "'";
 
 		try {
 			rs = stmt.executeQuery(getNumbers);
@@ -99,15 +98,13 @@ public class DatabaseConnector {
 
 	}
 
-	public static void addPatientRecord(String name, String phone,
-			String username) {
+	public static void addPatientRecord(String name, String phone, String username) {
 		ResultSet rs = null;
 		openConnection();
 		String doctorID = "";
 		try {
 			stmt = conn.createStatement();
-			String getDoctorId = "SELECT doctor_id FROM doctors WHERE username LIKE '"
-					+ username + "'";
+			String getDoctorId = "SELECT doctor_id FROM doctors WHERE username LIKE '" + username + "'";
 			// get doctor_id from doctors database to find patients numbers for
 			// this exact doctor
 			rs = stmt.executeQuery(getDoctorId);
@@ -115,8 +112,8 @@ public class DatabaseConnector {
 				doctorID = rs.getString("doctor_id");
 			}
 			// System.out.println(doctorID);
-			String addPatientSQL = "INSERT INTO patients (doctor_id, number) VALUES ('"
-					+ doctorID + "','" + phone + "')";
+			String addPatientSQL = "INSERT INTO patients (doctor_id, number) VALUES ('" + doctorID + "','" + phone
+					+ "')";
 			// Using the same string variable to execute another SQL statement
 			stmt.execute(addPatientSQL);
 			// new patient record created
@@ -133,8 +130,7 @@ public class DatabaseConnector {
 		openConnection();
 		String result = "";
 		ResultSet rs = null;
-		String checkLoginSQL = "SELECT password FROM doctors WHERE username LIKE '"
-				+ username + "'";
+		String checkLoginSQL = "SELECT password FROM doctors WHERE username LIKE '" + username + "'";
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(checkLoginSQL);
@@ -161,13 +157,11 @@ public class DatabaseConnector {
 
 	public static String MD5(String md5) {
 		try {
-			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance("MD5");
+			java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
 			byte[] array = md.digest(md5.getBytes());
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < array.length; ++i) {
-				sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100)
-						.substring(1, 3));
+				sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
 			}
 			return sb.toString();
 		} catch (java.security.NoSuchAlgorithmException e) {
@@ -175,20 +169,11 @@ public class DatabaseConnector {
 		return null;
 	}
 
-	public static void addTemplateRecord(String text, String days, String time,
-			String duration, String description) {
+	public static void addTemplateRecord(String text, String days, String time, String duration, String description) {
 		// inserting a template record to the db
 		openConnection();
 		String sqlQuery = "INSERT INTO templates( `text`, `days`, `time`, `duration`, `template_descr`) VALUES ('"
-				+ text
-				+ "','"
-				+ days
-				+ "','"
-				+ time
-				+ "','"
-				+ duration
-				+ "','"
-				+ description + "')";
+				+ text + "','" + days + "','" + time + "','" + duration + "','" + description + "')";
 		try {
 
 			stmt = conn.createStatement();
@@ -206,8 +191,7 @@ public class DatabaseConnector {
 	public static String[] getTemplateRecord(String description) {
 		openConnection();
 		System.out.println("Description is:" + description);
-		String sqlQuery = "SELECT * FROM templates WHERE template_desc LIKE '"
-				+ description + "'";
+		String sqlQuery = "SELECT * FROM templates WHERE template_desc LIKE '" + description + "'";
 		String[] templateRecord = new String[5];
 		ResultSet rs = null;
 		try {
@@ -259,29 +243,32 @@ public class DatabaseConnector {
 		curCal.setTime(curDate);
 		curCal.add(Calendar.DATE, Integer.parseInt(msg.day) - 1);
 		ResultSet rs = null;
-		String sqlSelect = "SELECT patient_id WHERE number LIKE '"+patientPhone+"'";
+		String sqlSelect = "SELECT patient_id WHERE number LIKE '" + patientPhone + "'";
 		String patient_id = "";
-		String day =""+curCal.get(Calendar.DAY_OF_MONTH);
-		String month =""+(curCal.get(Calendar.MONTH)+1);
-		String year =""+curCal.get(Calendar.YEAR);
-		String date =day+"-"+month+"-"+year;
-		String sqlInsert = "INSERT INTO delivery ('patient_id', 'text', 'date', 'time', 'sent' VALUES '"+patient_id+"', '"+msg.text+"', '"+date+"', '"+msg.time+"', '0' ";
-		
+		String day = "" + curCal.get(Calendar.DAY_OF_MONTH);
+		String month = "" + (curCal.get(Calendar.MONTH) + 1);
+		String year = "" + curCal.get(Calendar.YEAR);
+		String date = day + "-" + month + "-" + year;
+		String sqlInsert = "INSERT INTO delivery ('patient_id', 'text', 'date', 'time', 'sent' VALUES '" + patient_id
+				+ "', '" + msg.text + "', '" + date + "', '" + msg.time + "', '0' ";
+
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
 			while (rs.next()) {
-			patient_id = rs.getString("number");
+				patient_id = rs.getString("number");
 			}
 			rs = stmt.executeQuery(sqlInsert);
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	//Insert into db delivery -> delivered -> false, phone -> patientPhone, text -> msg.text time -> msg.time,  patient_id -> from patient phone with query
+		// Insert into db delivery -> delivered -> false, phone -> patientPhone,
+		// text -> msg.text time -> msg.time, patient_id -> from patient phone
+		// with query
 		// date -> cal.get(Calendar.DAY or DATE or DATE_OF_YEAR + YEAR..
-		
+
 	}
 
 	public static String getPackagesDB() {
@@ -305,5 +292,24 @@ public class DatabaseConnector {
 		}
 		return packageList;
 
+	}
+
+	public static ArrayList<Message> getSinglePackage(String title) {
+		ArrayList<Message> messageList = new ArrayList<Message>();
+		messageList.add(new Message("title", "text", "time", "day"));
+		String sqlSelect = "SELECT messages.id, messages.title, messages.time, messages.day FROM packages Left join messages ON packages.id = messages.package_id WHERE packages.title LIKE '"+title+"'";
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelect);
+			while (rs.next()) {
+				messageList.add(new Message(rs.getString("title"),rs.getString("text"),rs.getString("time"),rs.getString("day")));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return messageList;
 	}
 }
