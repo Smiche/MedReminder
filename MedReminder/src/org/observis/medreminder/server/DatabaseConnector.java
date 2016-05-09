@@ -272,7 +272,6 @@ public class DatabaseConnector {
 			rs = stmt.executeQuery(sqlSelect);
 			while (rs.next()) {
 			patient_id = rs.getString("number");
-			System.out.println(patient_id);
 			}
 			rs = stmt.executeQuery(sqlInsert);
 			
@@ -280,14 +279,31 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	
-		
-		//Insert into db delivery -> delivered -> false, phone -> patientPhone, text -> msg.text time -> msg.time,  patient_id -> from patient phone with query
+	//Insert into db delivery -> delivered -> false, phone -> patientPhone, text -> msg.text time -> msg.time,  patient_id -> from patient phone with query
 		// date -> cal.get(Calendar.DAY or DATE or DATE_OF_YEAR + YEAR..
-		
-		
 		
 	}
 
+	public static String getPackagesDB() {
+		openConnection();
+		String packageList = "";
+		String sqlQuery = "SELECT title FROM packages";
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			while (rs.next()) {
+				if (packageList.length() < 2) {
+					packageList += rs.getString("title");
+				} else {
+					packageList += "," + rs.getString("title");
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return packageList;
+
+	}
 }
