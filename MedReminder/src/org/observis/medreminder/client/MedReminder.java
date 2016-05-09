@@ -510,6 +510,7 @@ public class MedReminder implements EntryPoint {
 						messagesMiddlePanel.clear();
 						
 						// templateString = result;
+						if(!messages.isEmpty())
 						for (Message msg : messages) {
 							// replace text logic
 							String text = msg.text;
