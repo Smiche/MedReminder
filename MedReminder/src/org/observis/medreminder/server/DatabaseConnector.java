@@ -355,12 +355,14 @@ public class DatabaseConnector {
 		openConnection();
 		ArrayList<Delivery> deliveryList = new ArrayList<Delivery>();
 		String patient_id = "";
-		String sqlGetid = "SELECT patient_id FROM patients WHERE number = '"+phone+"'";
-		
+		String sqlGetid = "SELECT patient_id,number FROM patients WHERE number = '"+phone+"'";
+
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
-			stmt.execute(sqlGetid);
+			rs = stmt.executeQuery(sqlGetid);
+			while(rs.next())
+			patient_id = rs.getString("patient_id");
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

@@ -130,15 +130,17 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onSuccess(ArrayList<Delivery> result) {
+				Window.alert("Attempting to get deliveries: "+selectedPatient);
 				deliveriesPanel.clear();
 				deliveries.clear();
 				
 				deliveries = result;
 				if(deliveries.size()>0){
-										
+					
 					List<String> deliveriesTitle = new ArrayList<String>();
 					for(Delivery d:deliveries){
 						deliveriesTitle.add(d.date+ " "+d.time);
+						Window.alert("New delivery: "+d.date+" "+d.time);
 					}
 					TextCell deliveryCell = new TextCell();
 					CellList<String> deliveriesCellList = new CellList<String>(deliveryCell);
@@ -555,7 +557,6 @@ public class MedReminder implements EntryPoint {
 							Window.alert("You selected: " + selected);
 							selectedPatient = selected;
 							updateMiddlePanel();
-							updatePatientDeliveries();
 						}
 					}
 				});
@@ -576,7 +577,7 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Unable to fetch templateList.");
+				Window.alert("Unable to fetch packages list.");
 			}
 
 			@Override
@@ -593,6 +594,8 @@ public class MedReminder implements EntryPoint {
 				}
 				if(sel!=null)
 				packagesList.setSelectedIndex(sel);
+				
+				updatePatientDeliveries();
 			}
 		});
 	}
