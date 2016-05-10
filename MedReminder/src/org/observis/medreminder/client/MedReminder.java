@@ -400,7 +400,7 @@ public class MedReminder implements EntryPoint {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						String selected = selectionModel.getSelectedObject();
 						if (selected != null) {
-							// Window.alert("You selected: " + selected);
+							Window.alert("You selected: " + selected);
 							selectedPatient = selected;
 							updateMiddlePanel();
 						}
@@ -709,9 +709,9 @@ public class MedReminder implements EntryPoint {
 
 					@Override
 					public void onSuccess(Void result) {
+						loadPatients();
 						updatePatients();
-						selectedPatient = "";
-						updateMiddlePanel();
+						individualPanel.clear();
 					}
 					
 				});
