@@ -136,6 +136,7 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void removeDelivery(Delivery chosenDelivery)
 			throws IllegalArgumentException {
+		DatabaseConnector.removeDeliveryDB(chosenDelivery);
 		// use chosenDelivery.date and chosenDelivery.time to select the delivery that needs to be removed
 		
 	}
@@ -144,12 +145,13 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	public void addDelivery(Delivery delivery, String phone)
 			throws IllegalArgumentException {
 		// delivery.date delivery.text delivery.time and get patient id with phone
-		
+		DatabaseConnector.addDeliveryDB(delivery, phone);
 	}
 
 	@Override
 	public void editDelivery(Delivery oldDelivery, Delivery changedDelivery)
 			throws IllegalArgumentException {
+		DatabaseConnector.updateDeliveryDB(oldDelivery, changedDelivery);
 		// find old delivery with oldDelivery.time and oldDelivery.date and change all field values that u get from changedDelivery
 		
 	}

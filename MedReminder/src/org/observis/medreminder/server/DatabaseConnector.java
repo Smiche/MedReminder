@@ -293,7 +293,7 @@ public class DatabaseConnector {
 		String sqlInsert = "INSERT INTO messages(title,text,time,day,package_id) VALUES ('"+msg.title+"', '"+msg.text+"', '"+msg.time+"','"+msg.day+"','"+package_id+"')";
 		try {
 			stmt = conn.createStatement();
-			stmt.execute(sqlInsert);
+			stmt.executeUpdate(sqlInsert);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -395,4 +395,128 @@ public class DatabaseConnector {
 		closeConnection();
 		
 	}
+	
+	public static void removeDeliveryDB(Delivery chosenDelivery){
+		openConnection();
+		ResultSet rs = null;
+		String patient_id = "";
+		String delivery_id = "";
+		String sqlSelectPatient = "SELECT patient_id FROM patients WHERE number = '"+chosenDelivery.patientPhone+"'";
+		
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelectPatient);
+			while(rs.next()){
+				patient_id = rs.getString("patient_id");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rs = null;
+		String sqlSelectDelivery ="SELECT delivery_id FROM delivery WHERE patient_id = '"+patient_id+"' AND text = '"+chosenDelivery.text+"' AND date = '"+chosenDelivery.date+"' AND time = '"+chosenDelivery.time+"' AND sent = '"+chosenDelivery.sent+"'";
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelectDelivery);
+			while(rs.next()){
+				delivery_id = rs.getString("delivery_id");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String sqlRemove = "DELETE FROM delivery WHERE 	delivery_id ='"+delivery_id+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlRemove);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		closeConnection();
+	}
+	
+	public static void addDeliveryDB(Delivery delivery, String phone){
+		openConnection();
+		String patient_id = "";
+		ResultSet rs = null;
+		String sqlSelect = "SELECT patient_id FROM patients WHERE number = '"+delivery.patientPhone+"'";
+	
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelect);
+			while(rs.next()){
+				patient_id = rs.getString("patient_id");
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String sqlUpdate = "INSERT INTO delivery (patient_id, text, date, time, sent) VALUES ('"+patient_id+"','"+delivery.text+"','"+delivery.date+"','"+delivery.time+"','0')";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlUpdate);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		closeConnection();
+	}
+
+	public static void updateDeliveryDB(Delivery oldDelivery, Delivery changedDelivery){
+		openConnection();
+		String patient_id = "";
+		String delivery_id = "";
+		ResultSet rs = null;
+		String sqlSelect = "SELECT patient_id FROM patients WHERE number = '"+changedDelivery.patientPhone+"'";
+
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelect);
+			while(rs.next()){
+				patient_id = rs.getString("patient_id");
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rs = null;
+		String sqlSelectDelivery = "SELECT delivery_id FROM delivery WHERE patient_id = '"+patient_id+"' AND text = '"+oldDelivery.text+"' AND date = '"+oldDelivery.date+"' AND time = '"+oldDelivery.time+"' AND sent = '"+oldDelivery.sent+"'";
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelectDelivery);
+			delivery_id = rs.getString("delivery_id");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+				
+		String sqlUpdate = "UPDATE delivery SET text='"+changedDelivery.text+"',date='"+changedDelivery.date+"',time='"+changedDelivery.time+"' WHERE delivery_id = '"+delivery_id+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlUpdate);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		closeConnection();
+	}
+
 }
+
+
+

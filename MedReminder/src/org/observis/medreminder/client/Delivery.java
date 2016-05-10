@@ -1,4 +1,4 @@
-package org.observis.medreminder.client;
+	package org.observis.medreminder.client;
 
 import java.io.Serializable;
 
