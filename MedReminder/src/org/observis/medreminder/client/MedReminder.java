@@ -269,10 +269,30 @@ public class MedReminder implements EntryPoint {
 		});
 		
 		removeButton.addClickHandler(new ClickHandler(){
-
 			@Override
 			public void onClick(ClickEvent event) {
-				
+				Delivery toRemove = null;
+				for(Delivery d:deliveries){
+					if(selectedDelivery.equals(d.date +" "+d.time)){
+						toRemove = d;
+					}
+				}
+				if(toRemove!=null)
+				comService.removeDelivery(toRemove,new AsyncCallback<Void>(){
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+					}
+					@Override
+					public void onSuccess(Void result) {
+						updatePatientDeliveries();
+					}
+					
+				});
+				editDeliveryBox.hide();
+				deliveryDateBox.setText("");
+				deliveryTimeBox.setText("");
+				deliveryTextBox.setText("");
 			}
 			
 		});
@@ -281,16 +301,23 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				comService.addPatient(patientNameBox.getText(),
-						phoneBox.getText(), new AsyncCallback<String>() {
-
+				Delivery toEdit = null;
+				for(Delivery d:deliveries){
+					if(selectedDelivery.equals(d.date +" "+d.time)){
+						toEdit = d;
+					}
+				}
+				
+				Delivery changedDelivery = new Delivery(selectedPatient, deliveryTextBox.getText(), deliveryDateBox.getText(), deliveryTimeBox.getText(),"0");
+				if(toEdit!=null)
+				comService.editDelivery(toEdit,changedDelivery, new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Window.alert("Failure");
 							}
 							@Override
-							public void onSuccess(String result) {
-								//loadPatients();
+							public void onSuccess(Void result) {
+								// TODO Auto-generated method stub
 								updatePatientDeliveries();
 							}
 
@@ -816,7 +843,7 @@ public class MedReminder implements EntryPoint {
 
 		patientHolder.insert(patientsPanel, 0);
 		patientHolder.insert(individualPanel, 1);
-
+		patientHolder.insert(deliveriesPanel, 2);
 		RootPanel.get("mainPanel").add(bar);
 		
 		RootPanel.get("mainPanel").add(patientHolder);
