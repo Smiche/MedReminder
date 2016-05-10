@@ -69,6 +69,7 @@ public class MedReminder implements EntryPoint {
 	private Button addPatient = new Button("Add");
 	private Button removePatient = new Button("Remove");
 	private Button createMessage = new Button("Add");
+	private Button createCustomMessage = new Button("Add");
 	private TextBox phoneBox = new TextBox();
 	//used when creating new entries(used in dialog boxes)
 	private TextBox packageNameBox = new TextBox();
@@ -87,6 +88,8 @@ public class MedReminder implements EntryPoint {
 	private DialogBox addPatientBox = new DialogBox();
 	private DialogBox addPackageBox = new DialogBox();
 	private DialogBox createMessageBox = new DialogBox();
+	private DialogBox createCustomMessageBox = new DialogBox();
+	
 	private DialogBox editDeliveryBox = new DialogBox();
 	
 	private VerticalPanel packagesListPanel = new VerticalPanel();
@@ -130,7 +133,6 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onSuccess(ArrayList<Delivery> result) {
-				Window.alert("Attempting to get deliveries: "+selectedPatient);
 				deliveriesPanel.clear();
 				deliveries.clear();
 				
@@ -140,7 +142,6 @@ public class MedReminder implements EntryPoint {
 					List<String> deliveriesTitle = new ArrayList<String>();
 					for(Delivery d:deliveries){
 						deliveriesTitle.add(d.date+ " "+d.time);
-						Window.alert("New delivery: "+d.date+" "+d.time);
 					}
 					TextCell deliveryCell = new TextCell();
 					CellList<String> deliveriesCellList = new CellList<String>(deliveryCell);
@@ -153,7 +154,6 @@ public class MedReminder implements EntryPoint {
 								public void onSelectionChange(SelectionChangeEvent event) {
 									String selected = selectionModel.getSelectedObject();
 									if (selected != null) {
-										Window.alert("You selected: " + selected);
 										selectedDelivery = selected;
 										openDeliveryPopup();
 									}
@@ -440,6 +440,110 @@ public class MedReminder implements EntryPoint {
 		});
 	}
 	
+	private void createCustomMessagePopup(){
+		// Create the popup dialog box
+		createCustomMessageBox.setText("Add a message.");
+		createCustomMessageBox.setAnimationEnabled(true);
+		final Button closeButton = new Button("Close");
+		final Button addClick = new Button("Add");
+		// We can set the id of a widget by accessing its Element
+		closeButton.getElement().setId("closeButton");
+		VerticalPanel dialogVPanel = new VerticalPanel();
+		messageTitleBox.setText("");
+		messageTextBox.setText("");
+		messageDayBox.setText("");
+		messageHourBox.setText("");
+		messageMinuteBox.setText("");
+		
+		dialogVPanel.addStyleName("dialogVPanel");
+		dialogVPanel.add(new HTML("<b>*Title:</b>"));
+		dialogVPanel.add(messageTitleBox);
+		dialogVPanel.add(new HTML("<b>*Text:</b>"));
+		dialogVPanel.add(messageTextBox);
+		dialogVPanel.add(new HTML("<b>*Day:</b>"));
+		dialogVPanel.add(messageDayBox);
+		dialogVPanel.add(new HTML("<b>*Time:</b>"));
+		dialogVPanel.add(new HTML("Hour"));
+		dialogVPanel.add(messageHourBox);
+		dialogVPanel.add(new HTML("Minute"));
+		dialogVPanel.add(messageMinuteBox);
+		
+		
+		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		dialogVPanel.add(addClick);
+		dialogVPanel.add(closeButton);
+		createCustomMessageBox.setWidget(dialogVPanel);
+		createCustomMessageBox.center();
+		// Add a handler to close the DialogBox
+		closeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				createCustomMessageBox.hide();
+				messageTitleBox.setText("");
+				messageTextBox.setText("");
+				messageDayBox.setText("");
+				messageHourBox.setText("");
+				messageMinuteBox.setText("");
+			}
+		});
+		addClick.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				//
+				VerticalPanel newMsg = new VerticalPanel();
+				
+				// replace text logic
+				String text = messageTextBox.getText();
+				//.replaceAll("[value]", "");
+				TextBox box = new TextBox();
+				box.setText(text);
+				//box.setAlignment(TextAlignment.JUSTIFY);
+				
+				TextBox hour = new TextBox();
+				hour.setWidth("15px");
+				hour.setMaxLength(2);
+				hour.setText(messageHourBox.getText());
+				
+				TextBox minute = new TextBox();
+				minute.setWidth("15px");
+				minute.setMaxLength(2);
+				minute.setText(messageMinuteBox.getText());
+
+				Label delimeter = new Label(":");
+				delimeter.setWidth("8px");
+				delimeter
+						.setAutoHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+				HorizontalPanel timePane = new HorizontalPanel();
+
+				timePane.add(hour);
+				timePane.add(delimeter);
+				timePane.add(minute);
+				VerticalPanel vp = new VerticalPanel();
+				vp.add(new Label("" + messageTitleBox.getText()));
+				vp.add(box);
+				vp.add(new Label("Day: " + messageDayBox.getText()));
+				vp.add(timePane);
+				
+				messagePanel.add(vp);
+				packagePanel.clear();
+				for(VerticalPanel p:messagePanel){
+					packagePanel.add(p);
+				}
+				
+				packagePanel.add(createCustomMessage);
+				createCustomMessageBox.hide();
+				messageTitleBox.setText("");
+				messageTextBox.setText("");
+				messageDayBox.setText("");
+				messageHourBox.setText("");
+				messageMinuteBox.setText("");
+			}
+
+		});
+		
+	}
+	
 	private void createMessagePopup(){
 		// Create the popup dialog box
 		createMessageBox.setText("Add a message.");
@@ -554,7 +658,6 @@ public class MedReminder implements EntryPoint {
 					public void onSelectionChange(SelectionChangeEvent event) {
 						String selected = selectionModel.getSelectedObject();
 						if (selected != null) {
-							Window.alert("You selected: " + selected);
 							selectedPatient = selected;
 							updateMiddlePanel();
 						}
@@ -609,7 +712,7 @@ public class MedReminder implements EntryPoint {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert("Unable to fetch template by name.");
+						Window.alert("Unable to fetch package by name.");
 
 					}
 
@@ -620,7 +723,6 @@ public class MedReminder implements EntryPoint {
 						messagePanel.clear();
 						// templateString = result;
 						for (Message msg : messages) {
-							Window.alert(msg.text);
 							// replace text logic
 							String text = msg.text;
 							//.replaceAll("[value]", "");
@@ -661,7 +763,9 @@ public class MedReminder implements EntryPoint {
 						for(VerticalPanel p:messagePanel){
 							packagePanel.add(p);
 						}
+						packagePanel.add(createCustomMessage);
 						individualPanel.add(packagePanel);
+						
 					}
 
 				});
@@ -919,7 +1023,6 @@ public class MedReminder implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				if(!selectedPatient.equalsIgnoreCase("")){
-					Window.alert("trying to remove: "+selectedPatient);
 				comService.removePatient(selectedPatient, new AsyncCallback<Void>(){
 
 					@Override
@@ -965,6 +1068,15 @@ public class MedReminder implements EntryPoint {
 				});
 			}
 
+		});
+		
+		createCustomMessage.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				createCustomMessagePopup();
+			}
+			
 		});
 		
 		createMessage.addClickHandler(new ClickHandler(){
