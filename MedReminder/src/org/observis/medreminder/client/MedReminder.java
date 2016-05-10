@@ -113,6 +113,22 @@ public class MedReminder implements EntryPoint {
 	 * Submitting task to server
 	 */
 
+	private void updatePatientDeliveries(){
+		comService.getDeliveries(selectedPatient,new AsyncCallback<ArrayList<Delivery>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Unable to fetch deliveries for patient: "+selectedPatient );
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Delivery> result) {
+				
+			}
+			
+		});
+	}
+	
 	private void submitTask() {
 		ArrayList<Message> data = new ArrayList<Message>();
 		VerticalPanel cur = new VerticalPanel();
@@ -683,7 +699,22 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
+				if(!selectedPatient.equalsIgnoreCase(""))
+				comService.removePatient(selectedPatient, new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Unable to remove patient: "+selectedPatient);						
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						updatePatients();
+						selectedPatient = "";
+						updateMiddlePanel();
+					}
+					
+				});
 			}
 			
 		});
