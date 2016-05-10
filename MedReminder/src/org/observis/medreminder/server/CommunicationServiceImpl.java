@@ -114,7 +114,8 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void removePackage(String title) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
+		DatabaseConnector.removePackageDB(title);
 		
 	}
 
@@ -122,12 +123,13 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<Delivery> getDeliveries(String phone)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		return DatabaseConnector.returnDeliveryDB(phone);
 	}
 
 	@Override
 	public void removePatient(String phone) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
+		DatabaseConnector.removePatientDB(phone);
 		
 	}
 

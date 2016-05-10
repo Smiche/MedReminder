@@ -380,4 +380,18 @@ public class DatabaseConnector {
 		closeConnection();
 		return deliveryList;
 	}
+	
+	public static void removePatientDB(String phone){
+		openConnection();
+		String sqlRemove = "DELETE FROM patients WHERE number = '"+phone+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlRemove);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+		
+	}
 }
