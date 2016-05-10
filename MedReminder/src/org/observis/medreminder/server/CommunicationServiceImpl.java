@@ -125,4 +125,10 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 		return null;
 	}
 
+	@Override
+	public void removePatient(String phone) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

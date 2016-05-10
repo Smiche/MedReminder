@@ -67,6 +67,7 @@ public class MedReminder implements EntryPoint {
 	
 	
 	private Button addPatient = new Button("Add");
+	private Button removePatient = new Button("Remove");
 	private Button createMessage = new Button("Add");
 	private TextBox phoneBox = new TextBox();
 	//used when creating new entries(used in dialog boxes)
@@ -106,6 +107,7 @@ public class MedReminder implements EntryPoint {
 	private HandlerRegistration closeDialogHandlerReg;
 
 	private Button addPackage = new Button("Add");
+	private Button removePackage = new Button("Remove");
 
 	/**
 	 * Submitting task to server
@@ -395,6 +397,7 @@ public class MedReminder implements EntryPoint {
 		patientsPanel = new VerticalPanel();
 		patientsPanel.add(cellList);
 		patientsPanel.add(addPatient);
+		patientsPanel.add(removePatient);
 
 	}
 
@@ -675,11 +678,40 @@ public class MedReminder implements EntryPoint {
 			}
 
 		});
+		
+		removePatient.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+			}
+			
+		});
 
 		addPackage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				addPackagePopup();
+			}
+
+		});
+		removePackage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				comService.removePackage(selectedPackage, new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to remove package.");	
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						initPackageHolder();
+						selectedPackage = "";
+					}
+					
+				});
 			}
 
 		});
@@ -735,6 +767,7 @@ public class MedReminder implements EntryPoint {
 				
 				packagesListPanel.add(packagesCellList);
 				packagesListPanel.add(addPackage);
+				packagesListPanel.add(removePackage);
 				
 				packageHolder.add(packagesListPanel);
 			}
