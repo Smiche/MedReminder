@@ -94,6 +94,7 @@ public class MedReminder implements EntryPoint {
 
 	private VerticalPanel packagePanel = new VerticalPanel();
 	private ArrayList<VerticalPanel> messagePanel = new ArrayList<VerticalPanel>();
+	
 	private VerticalPanel deliveriesPanel = new VerticalPanel();
 
 	private String medValue = "";
@@ -112,7 +113,6 @@ public class MedReminder implements EntryPoint {
 
 	private void submitTask() {
 		ArrayList<Message> data = new ArrayList<Message>();
-		Window.alert("submitting data?");
 		VerticalPanel cur = new VerticalPanel();
 		String txt = "";
 		String dayVal = "";
@@ -722,7 +722,6 @@ public class MedReminder implements EntryPoint {
 							public void onSelectionChange(SelectionChangeEvent event) {
 								String selected = selectionModel.getSelectedObject();
 								if (selected != null) {
-									Window.alert("You selected: " + selected);
 									selectedPackage = selected;
 									updatePackageHolderMiddle();
 								}

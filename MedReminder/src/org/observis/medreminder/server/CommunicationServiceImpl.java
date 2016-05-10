@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.observis.medreminder.client.CommunicationService;
+import org.observis.medreminder.client.Delivery;
 import org.observis.medreminder.client.Message;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -115,6 +116,13 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 	public void removePackage(String title) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ArrayList<Delivery> getDeliveries(String phone)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
