@@ -21,7 +21,7 @@ public interface CommunicationService extends RemoteService {
 	ArrayList<Delivery> getDeliveries(String phone)throws IllegalArgumentException;
 	void removeDelivery(Delivery chosenDelivery)throws IllegalArgumentException;
 	void addDelivery(Delivery delivery,String phone)throws IllegalArgumentException;
-	void editDelivery(Delivery oldDelivery,Delivery changedDelivery)throws IllegalArgumentException;
+	void editDelivery(Delivery oldDelivery, Delivery changedDelivery)throws IllegalArgumentException;
 	void removePatient(String phone)throws IllegalArgumentException;
 	String getPatients()throws IllegalArgumentException;
 	String scheduleMessages(ArrayList<Message> messages,String patientPhone) throws IllegalArgumentException;
