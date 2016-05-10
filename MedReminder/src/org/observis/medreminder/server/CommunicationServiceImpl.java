@@ -133,4 +133,25 @@ public class CommunicationServiceImpl extends RemoteServiceServlet implements
 		
 	}
 
+	@Override
+	public void removeDelivery(Delivery chosenDelivery)
+			throws IllegalArgumentException {
+		// use chosenDelivery.date and chosenDelivery.time to select the delivery that needs to be removed
+		
+	}
+
+	@Override
+	public void addDelivery(Delivery delivery, String phone)
+			throws IllegalArgumentException {
+		// delivery.date delivery.text delivery.time and get patient id with phone
+		
+	}
+
+	@Override
+	public void editDelivery(Delivery oldDelivery, Delivery changedDelivery)
+			throws IllegalArgumentException {
+		// find old delivery with oldDelivery.time and oldDelivery.date and change all field values that u get from changedDelivery
+		
+	}
+
 }

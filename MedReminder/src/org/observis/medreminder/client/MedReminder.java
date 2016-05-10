@@ -78,12 +78,16 @@ public class MedReminder implements EntryPoint {
 	private TextBox messageHourBox = new TextBox();
 	private TextBox messageMinuteBox = new TextBox();
 	private TextBox messageDayBox = new TextBox();
+	private TextBox deliveryTextBox = new TextBox();
+	private TextBox deliveryDateBox = new TextBox();
+	private TextBox deliveryTimeBox = new TextBox();
 
 	private VerticalPanel patientsPanel = new VerticalPanel();
 	private ListBox packagesList = new ListBox();
 	private DialogBox addPatientBox = new DialogBox();
 	private DialogBox addPackageBox = new DialogBox();
 	private DialogBox createMessageBox = new DialogBox();
+	private DialogBox editDeliveryBox = new DialogBox();
 	
 	private VerticalPanel packagesListPanel = new VerticalPanel();
 	private VerticalPanel packagesMiddlePanel = new VerticalPanel();
@@ -91,6 +95,7 @@ public class MedReminder implements EntryPoint {
 	
 	private String[] patientString;
 	private String[] packagesListString;
+	private ArrayList<Delivery> deliveries;
 	private DialogBox popupPanel = new DialogBox();
 
 	private VerticalPanel packagePanel = new VerticalPanel();
@@ -101,6 +106,7 @@ public class MedReminder implements EntryPoint {
 	private String medValue = "";
 	private String selectedPatient = "";
 	private String selectedPackage = "";
+	private String selectedDelivery = "";
 	
 	MenuBar bar = new MenuBar();
 
@@ -108,6 +114,7 @@ public class MedReminder implements EntryPoint {
 
 	private Button addPackage = new Button("Add");
 	private Button removePackage = new Button("Remove");
+	private Button removeAllDeliveries = new Button("Remove all");
 
 	/**
 	 * Submitting task to server
@@ -123,6 +130,42 @@ public class MedReminder implements EntryPoint {
 
 			@Override
 			public void onSuccess(ArrayList<Delivery> result) {
+				deliveriesPanel.clear();
+				deliveries.clear();
+				
+				deliveries = result;
+				if(deliveries.get(0).date!=null){
+										
+					List<String> deliveriesTitle = new ArrayList<String>();
+					for(Delivery d:deliveries){
+						deliveriesTitle.add(d.date+ " "+d.time);
+					}
+					TextCell deliveryCell = new TextCell();
+					CellList<String> deliveriesCellList = new CellList<String>(deliveryCell);
+					// cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+
+					final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+					deliveriesCellList.setSelectionModel(selectionModel);
+					selectionModel
+							.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+								public void onSelectionChange(SelectionChangeEvent event) {
+									String selected = selectionModel.getSelectedObject();
+									if (selected != null) {
+										Window.alert("You selected: " + selected);
+										selectedDelivery = selected;
+										openDeliveryPopup();
+									}
+								}
+							});
+					// Window.alert("Size:"+patients.size());
+					deliveriesCellList.setRowCount(deliveriesTitle.size(), true);
+					deliveriesCellList.setRowData(0, deliveriesTitle);
+
+					//patientsPanel = new VerticalPanel();
+					deliveriesPanel.add(deliveriesCellList);
+					deliveriesPanel.add(removeAllDeliveries);
+					
+				}
 				
 			}
 			
@@ -179,6 +222,88 @@ public class MedReminder implements EntryPoint {
 				});
 	}
 
+	private void openDeliveryPopup(){
+		Delivery cur = null;
+		
+		for(Delivery d:deliveries){
+			if(selectedDelivery.equals(d.date+" "+d.time)){
+				cur = d;
+			}
+		}
+		
+		editDeliveryBox.setText("Edit delivery.");
+		editDeliveryBox.setAnimationEnabled(true);
+		final Button closeButton = new Button("Close");
+		final Button editClick = new Button("Save");
+		final Button removeButton = new Button("Remove");
+		// We can set the id of a widget by accessing its Element
+		closeButton.getElement().setId("closeButton");
+		VerticalPanel dialogVPanel = new VerticalPanel();
+		//+phoneBox.setText("+358");
+		
+		deliveryDateBox.setText(cur.date);
+		deliveryTimeBox.setText(cur.time);
+		deliveryTextBox.setText(cur.text);
+		
+		dialogVPanel.addStyleName("dialogVPanel");
+		dialogVPanel.add(new HTML("Delivery date:"));
+		dialogVPanel.add(deliveryDateBox);
+		dialogVPanel.add(new HTML("Delivery time:"));
+		dialogVPanel.add(deliveryTimeBox);
+		dialogVPanel.add(new HTML("Delivery text:"));
+		dialogVPanel.add(deliveryTextBox);
+		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		dialogVPanel.add(editClick);
+		dialogVPanel.add(removeButton);
+		dialogVPanel.add(closeButton);
+		editDeliveryBox.setWidget(dialogVPanel);
+		editDeliveryBox.center();
+		// Add a handler to close the DialogBox
+		closeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				editDeliveryBox.hide();
+				deliveryDateBox.setText("");
+				deliveryTimeBox.setText("");
+				deliveryTextBox.setText("");
+			}
+		});
+		
+		removeButton.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+			}
+			
+		});
+		
+		editClick.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				comService.addPatient(patientNameBox.getText(),
+						phoneBox.getText(), new AsyncCallback<String>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("Failure");
+							}
+							@Override
+							public void onSuccess(String result) {
+								//loadPatients();
+								updatePatientDeliveries();
+							}
+
+						});
+				editDeliveryBox.hide();
+				deliveryDateBox.setText("");
+				deliveryTimeBox.setText("");
+				deliveryTextBox.setText("");
+			}
+
+		});
+	}
+	
 	private void addPatientPopup() {
 		// Create the popup dialog box
 		addPatientBox.setText("Add a patient.");
