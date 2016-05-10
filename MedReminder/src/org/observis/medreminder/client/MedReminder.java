@@ -124,6 +124,7 @@ public class MedReminder implements EntryPoint {
 	 */
 	
 	private void setMainStyles(){
+		RootPanel.get().setStyleName("rootPanel");
 		patientsPanel.setStyleName("patientsPanel");
 		individualPanel.setStyleName("individualPanel");
 		deliveriesPanel.setStyleName("deliveriesPanel");
@@ -1365,6 +1366,5 @@ public class MedReminder implements EntryPoint {
 		nameField.addKeyUpHandler(loginHandler);
 		passField.addKeyUpHandler(loginHandler);
 		loginButton.addClickHandler(loginHandler);
-		showDialog("hello");
 	}
 }
