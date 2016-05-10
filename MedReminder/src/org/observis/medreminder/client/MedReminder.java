@@ -305,7 +305,7 @@ public class MedReminder implements EntryPoint {
 		// Add a handler to close the DialogBox
 		closeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				addPackageBox.hide();
+				createMessageBox.hide();
 				messageTitleBox.setText("");
 				messageTextBox.setText("");
 				messageDayBox.setText("");
@@ -445,12 +445,13 @@ public class MedReminder implements EntryPoint {
 						messagePanel.clear();
 						// templateString = result;
 						for (Message msg : messages) {
+							Window.alert(msg.text);
 							// replace text logic
-							String text = msg.text.replaceAll("[value]", "");
-							//
+							String text = msg.text;
+							//.replaceAll("[value]", "");
 							TextBox box = new TextBox();
 							box.setText(text);
-							box.setAlignment(TextAlignment.JUSTIFY);
+							//box.setAlignment(TextAlignment.JUSTIFY);
 							String[] time = msg.time.split(":");
 							
 							TextBox hour = new TextBox();
