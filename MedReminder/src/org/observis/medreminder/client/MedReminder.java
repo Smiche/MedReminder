@@ -122,6 +122,14 @@ public class MedReminder implements EntryPoint {
 	/**
 	 * Submitting task to server
 	 */
+	
+	private void setMainStyles(){
+		patientsPanel.setStyleName("patientsPanel");
+		individualPanel.setStyleName("individualPanel");
+		deliveriesPanel.setStyleName("deliveriesPanel");
+		packagePanel.setStyleName("packagePanel");
+		//patientsPanel.addStyleName("patientsPanel");
+	}
 
 	private void updatePatientDeliveries(){
 		comService.getDeliveries(selectedPatient,new AsyncCallback<ArrayList<Delivery>>(){
@@ -524,6 +532,7 @@ public class MedReminder implements EntryPoint {
 				vp.add(box);
 				vp.add(new Label("Day: " + messageDayBox.getText()));
 				vp.add(timePane);
+				vp.setStyleName("messageItemStyle");
 				
 				messagePanel.add(vp);
 				packagePanel.clear();
@@ -667,7 +676,7 @@ public class MedReminder implements EntryPoint {
 		cellList.setRowCount(patients.size(), true);
 		cellList.setRowData(0, patients);
 
-		patientsPanel = new VerticalPanel();
+		patientsPanel.clear();
 		patientsPanel.add(cellList);
 		patientsPanel.add(addPatient);
 		patientsPanel.add(removePatient);
@@ -756,6 +765,7 @@ public class MedReminder implements EntryPoint {
 							vp.add(box);
 							vp.add(new Label("Day: " + msg.day));
 							vp.add(timePane);
+							vp.setStyleName("messageItemStyle");
 							
 							messagePanel.add(vp);
 							
@@ -1008,7 +1018,7 @@ public class MedReminder implements EntryPoint {
 	
 	public void onModuleLoad() {
 		initPackageHolder();
-		
+		setMainStyles();
 
 		addPatient.addClickHandler(new ClickHandler() {
 			@Override
