@@ -686,67 +686,6 @@ public class MedReminder implements EntryPoint {
 
 	private void initUI() {
 		clearUI();
-
-		addPatient.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				addPatientPopup();
-			}
-
-		});
-		
-		removePatient.addClickHandler(new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				if(!selectedPatient.equalsIgnoreCase(""))
-				comService.removePatient(selectedPatient, new AsyncCallback<Void>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Unable to remove patient: "+selectedPatient);						
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						loadPatients();
-						updatePatients();
-						individualPanel.clear();
-					}
-					
-				});
-			}
-			
-		});
-
-		addPackage.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				addPackagePopup();
-			}
-
-		});
-		removePackage.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				comService.removePackage(selectedPackage, new AsyncCallback<Void>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to remove package.");	
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						initPackageHolder();
-						selectedPackage = "";
-					}
-					
-				});
-			}
-
-		});
-
 		
 		updatePatients();
 
@@ -809,6 +748,68 @@ public class MedReminder implements EntryPoint {
 	
 	public void onModuleLoad() {
 		initPackageHolder();
+		
+
+		addPatient.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				addPatientPopup();
+			}
+
+		});
+		
+		removePatient.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(!selectedPatient.equalsIgnoreCase("")){
+					Window.alert("trying to remove: "+selectedPatient);
+				comService.removePatient(selectedPatient, new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Unable to remove patient: "+selectedPatient);						
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						loadPatients();
+						//updatePatients();
+						individualPanel.clear();
+					}
+					
+				});
+			}
+			}
+		});
+
+		addPackage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				addPackagePopup();
+			}
+
+		});
+		removePackage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				comService.removePackage(selectedPackage, new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to remove package.");	
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						initPackageHolder();
+						selectedPackage = "";
+					}
+					
+				});
+			}
+
+		});
 		
 		createMessage.addClickHandler(new ClickHandler(){
 

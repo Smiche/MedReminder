@@ -50,6 +50,7 @@ public class DatabaseConnector {
 		try {
 			if (conn != null)
 				conn.close();
+				stmt = null;
 			// System.out.println("Connection is closed");
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -58,8 +59,7 @@ public class DatabaseConnector {
 	}
 
 	public static String returnPatient(String doctorName) { // returns patients
-															// numbers for exact
-															// doctor name
+															// numbers for exact														// doctor name
 		openConnection();
 		ResultSet rs = null;
 		String doctorID = "";
