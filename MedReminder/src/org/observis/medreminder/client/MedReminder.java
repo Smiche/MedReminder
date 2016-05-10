@@ -95,7 +95,7 @@ public class MedReminder implements EntryPoint {
 	
 	private String[] patientString;
 	private String[] packagesListString;
-	private ArrayList<Delivery> deliveries;
+	private ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
 	private DialogBox popupPanel = new DialogBox();
 
 	private VerticalPanel packagePanel = new VerticalPanel();
@@ -134,7 +134,7 @@ public class MedReminder implements EntryPoint {
 				deliveries.clear();
 				
 				deliveries = result;
-				if(deliveries.get(0).date!=null){
+				if(deliveries.size()>0){
 										
 					List<String> deliveriesTitle = new ArrayList<String>();
 					for(Delivery d:deliveries){
@@ -555,6 +555,7 @@ public class MedReminder implements EntryPoint {
 							Window.alert("You selected: " + selected);
 							selectedPatient = selected;
 							updateMiddlePanel();
+							updatePatientDeliveries();
 						}
 					}
 				});

@@ -365,9 +365,8 @@ public class DatabaseConnector {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String sqlSelect = "SELECT  text, date, time, sent FROM delivery WHERE patient_id = '"+patient_id+"' SORT BY date, time";
+		String sqlSelect = "SELECT  text, date, time, sent FROM delivery WHERE patient_id = '"+patient_id+"' ORDER BY date, time";
 		try {
-			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sqlSelect);
 			while(rs.next()){
 				deliveryList.add(new Delivery(phone, rs.getString("text"),rs.getString("date"),rs.getString("time"),rs.getString("sent")));
