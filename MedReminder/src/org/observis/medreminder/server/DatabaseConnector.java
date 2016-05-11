@@ -18,7 +18,7 @@ import org.observis.medreminder.client.Message;
 public class DatabaseConnector {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql://192.168.8.101:3306/patients";
+	static final String DB_URL = "jdbc:mysql://192.168.8.102:3306/patients";
 	static Connection conn = null;
 	static Statement stmt = null;
 	// Database credentials
