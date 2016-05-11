@@ -65,7 +65,6 @@ public class PatientHolder extends HorizontalPanel{
 	private String[] packagesListString;
 	private String medValue = "";
 	private String selectedPatient = "";
-	private String selectedPackage = "";
 	private String selectedDelivery = "";
 	
 	private HandlerRegistration closeDialogHandlerReg;
@@ -527,7 +526,8 @@ public class PatientHolder extends HorizontalPanel{
 		TextCell patientsCell = new TextCell();
 		CellList<String> cellList = new CellList<String>(patientsCell);
 		// cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-
+		cellList.setStyleName("cellList");
+		
 		final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 		cellList.setSelectionModel(selectionModel);
 		selectionModel
