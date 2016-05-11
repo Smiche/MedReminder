@@ -473,9 +473,6 @@ public class DatabaseConnector {
 
 	public static void updateDeliveryDB(Delivery oldDelivery, Delivery changedDelivery){
 		openConnection();
-		
-		System.out.println("Old delivery: "+oldDelivery.text+" "+oldDelivery.patientPhone+" "+oldDelivery.time);
-		System.out.println("Old delivery: "+changedDelivery.text+" "+changedDelivery.patientPhone+" "+changedDelivery.time);
 		String patient_id = "";
 		String delivery_id = "";
 		ResultSet rs = null;

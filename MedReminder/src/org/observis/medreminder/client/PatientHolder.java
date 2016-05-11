@@ -36,6 +36,8 @@ public class PatientHolder extends HorizontalPanel{
 	private Button createCustomMessage = new Button("Add");
 	private TextBox phoneBox = new TextBox();
 	
+	final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
+	
 	private TextBox patientNameBox = new TextBox();
 	private TextBox messageTitleBox = new TextBox();
 	private TextBox messageTextBox = new TextBox();
@@ -85,7 +87,6 @@ public class PatientHolder extends HorizontalPanel{
 		});
 		
 		removePatient.addClickHandler(new ClickHandler(){
-
 			@Override
 			public void onClick(ClickEvent event) {
 				if(!selectedPatient.equalsIgnoreCase("")){
@@ -272,6 +273,7 @@ public class PatientHolder extends HorizontalPanel{
 				deliveryDateBox.setText("");
 				deliveryTimeBox.setText("");
 				deliveryTextBox.setText("");
+				selectionModel.setSelected(""+selectedDelivery, false);
 			}
 		});
 		
@@ -528,7 +530,6 @@ public class PatientHolder extends HorizontalPanel{
 		CellList<String> cellList = new CellList<String>(patientsCell);
 		// cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		
-		final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 		cellList.setSelectionModel(selectionModel);
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
