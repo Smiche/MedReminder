@@ -36,8 +36,6 @@ public class PatientHolder extends HorizontalPanel{
 	private Button createCustomMessage = new Button("Add");
 	private TextBox phoneBox = new TextBox();
 	
-	final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
-	
 	private TextBox patientNameBox = new TextBox();
 	private TextBox messageTitleBox = new TextBox();
 	private TextBox messageTextBox = new TextBox();
@@ -47,7 +45,7 @@ public class PatientHolder extends HorizontalPanel{
 	private TextBox deliveryTextBox = new TextBox();
 	private TextBox deliveryDateBox = new TextBox();
 	private TextBox deliveryTimeBox = new TextBox();
-	
+	SingleSelectionModel<String> patientSelectionModel;
 	private VerticalPanel patientsPanel = new VerticalPanel();
 	private ListBox packagesList = new ListBox();
 	private DialogBox addPatientBox = new DialogBox();
@@ -273,7 +271,7 @@ public class PatientHolder extends HorizontalPanel{
 				deliveryDateBox.setText("");
 				deliveryTimeBox.setText("");
 				deliveryTextBox.setText("");
-				selectionModel.setSelected(""+selectedDelivery, false);
+				patientSelectionModel.clear();
 			}
 		});
 		
@@ -530,11 +528,12 @@ public class PatientHolder extends HorizontalPanel{
 		CellList<String> cellList = new CellList<String>(patientsCell);
 		// cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		
-		cellList.setSelectionModel(selectionModel);
-		selectionModel
+		patientSelectionModel = new SingleSelectionModel<String>();
+		cellList.setSelectionModel(patientSelectionModel);
+		patientSelectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						String selected = selectionModel.getSelectedObject();
+						String selected = patientSelectionModel.getSelectedObject();
 						if (selected != null) {
 							selectedPatient = selected;
 							updateMiddlePanel();
