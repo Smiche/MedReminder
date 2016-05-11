@@ -495,8 +495,7 @@ public class PatientHolder extends HorizontalPanel{
 		
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void loadPatients() {
+	@SuppressWarnings({ "unchecked", "rawtypes" }) void loadPatients() {
 		comService.getPatients(new AsyncCallback() {
 
 			@Override
@@ -710,7 +709,7 @@ public class PatientHolder extends HorizontalPanel{
 
 	}
 
-	private void initUI() {
+	void initUI() {
 		clearUI();
 		updatePatients();
 		

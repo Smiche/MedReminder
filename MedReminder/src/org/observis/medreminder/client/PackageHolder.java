@@ -51,6 +51,46 @@ public class PackageHolder extends HorizontalPanel{
 	private Button addPackage = new Button("Add");
 	private Button removePackage = new Button("Remove");
 	
+	public PackageHolder(){
+		addPackage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				addPackagePopup();
+			}
+
+		});
+		removePackage.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				comService.removePackage(selectedPackage, new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to remove package.");	
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						initPackageHolder();
+						selectedPackage = "";
+					}
+					
+				});
+			}
+
+		});
+		
+		createMessage.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				createMessagePopup();				
+			}
+			
+		});
+		
+		
+	}
 	
 	private void addPackagePopup(){
 		// Create the popup dialog box
