@@ -7,6 +7,95 @@ body, table td, select {
     font-size: medium;
     color: #ebebeb;
 }
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+  text-align: center;
+}
+
+.sendButton {
+  margin: 0 auto; 
+  display: block;
+  font-size: 16pt;
+}
+.loginButton {
+  margin: 0 auto; 
+  display: block;
+  font-size: 16pt;
+}
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+.rootPanel{
+}
+
+.patientsPanel{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+    background-color: #2e3338;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+.individualPanel{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+    background-color: #2e3338;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+.deliveriesPanel{
+	    margin-bottom: 20px;
+    background-color: #2e3338;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.messageItemStyle{
+	
+}
+
+.packagePanel{
+	
+}
+#closeButton {
+  margin: 15px 6px 6px;
+}
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: black;
+}
+#table {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: medium;
+    color: #ebebeb;
+    
+}
+body, select, table td{	
+	    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: medium;
+    color: #ebebeb;
+}
 select {
   color: #000;
 }
@@ -213,9 +302,13 @@ a, a:visited, a:hover {
   cursor: default;
 }
 .gwt-MenuBar .gwt-MenuItem-selected {
-  background: #666;
-  color: #0cf;
+  background: #222222;
+  color: #F0FD00;
 }
+.com-google-gwt-user-cellview-client-CellList-Style-cellListKeyboardSelectedItem {
+	
+    background-color: #2e3338 !important;
+	}
 .gwt-MenuBar .gwt-MenuItem-disabled {
   color: #ccc;
 }
