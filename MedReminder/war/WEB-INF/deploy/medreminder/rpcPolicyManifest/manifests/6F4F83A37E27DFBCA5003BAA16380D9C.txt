@@ -1,2 +1,0 @@
-serviceClass: org.observis.medreminder.client.GreetingService
-path: 407080F78BFD3FD4D8F7159BF475C06E.gwt.rpc

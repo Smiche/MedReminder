@@ -519,6 +519,33 @@ public class DatabaseConnector {
 		
 		closeConnection();
 	}
+	public static void removeAllDeliveryDB(String phone){
+		openConnection();
+		String patient_id = "";
+		String sqlSelect = "SELECT patient_id FROM patients WHERE number ='"+phone+"'";
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sqlSelect);
+			while(rs.next()){
+				patient_id = rs.getString("patient_id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String sqlDelete = "DELETE FROM delivery WHERE patient_id = '"+patient_id+"'";
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlDelete);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		closeConnection();
+	}
 
 }
 
