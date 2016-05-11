@@ -87,5 +87,13 @@ border: 4px solid #660066;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: medium;
+    color: #ebebeb;
+    
 }
-
+body, select, table td{	
+	    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: medium;
+    color: #ebebeb;
+}
