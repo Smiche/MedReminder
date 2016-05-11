@@ -43,15 +43,12 @@ public class PackageHolder extends HorizontalPanel{
 	
 	private DialogBox addPackageBox = new DialogBox();
 	
-	private String[] packagesListString;
-	private String medValue = "";
-	private String selectedPatient = "";
 	private String selectedPackage = "";
-	private String selectedDelivery = "";
 	private Button addPackage = new Button("Add");
 	private Button removePackage = new Button("Remove");
 	
 	public PackageHolder(){
+		
 		addPackage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -89,7 +86,7 @@ public class PackageHolder extends HorizontalPanel{
 			
 		});
 		
-		
+		this.initPackageHolder();
 	}
 	
 	private void addPackagePopup(){

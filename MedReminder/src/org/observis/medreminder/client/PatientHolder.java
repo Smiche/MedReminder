@@ -72,6 +72,11 @@ public class PatientHolder extends HorizontalPanel{
 	private Button removeAllDeliveries = new Button("Remove all");
 	
 	public PatientHolder(){
+		patientsPanel.setStyleName("patientsPanel");
+		individualPanel.setStyleName("individualPanel");
+		deliveriesPanel.setStyleName("deliveriesPanel");
+		packagePanel.setStyleName("packagePanel");
+		
 		addPatient.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -549,7 +554,7 @@ public class PatientHolder extends HorizontalPanel{
 	@SuppressWarnings("unused")
 	private void requestPackagesList() {
 		comService.getPackagesList(new AsyncCallback<String>() {
-
+			
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Unable to fetch packages list.");
