@@ -942,9 +942,7 @@ public class MedReminder implements EntryPoint {
 	private void updatePackageHolderMiddle(){
 		packageHolder.clear();
 		packageHolder.add(packagesListPanel);
-		loadEditablePackage(selectedPackage);
-		
-		
+		loadEditablePackage(selectedPackage);		
 	}
 	private void clearUI() {
 		patientsPanel.clear();
