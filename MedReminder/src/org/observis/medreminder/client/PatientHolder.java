@@ -43,7 +43,6 @@ public class PatientHolder extends HorizontalPanel{
 	private TextBox messageHourBox = new TextBox();
 	private TextBox messageMinuteBox = new TextBox();
 	private TextBox messageDayBox = new TextBox();
-	
 	private TextBox deliveryTextBox = new TextBox();
 	private TextBox deliveryDateBox = new TextBox();
 	private TextBox deliveryTimeBox = new TextBox();

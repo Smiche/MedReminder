@@ -54,8 +54,6 @@ public class MedReminder implements EntryPoint {
 	/**
 	 * Create a remote service proxy to talk to the server-side services.
 	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
 	private final LoginServiceAsync loginService = GWT
 			.create(LoginService.class);
 	private final CommunicationServiceAsync comService = GWT
@@ -64,7 +62,6 @@ public class MedReminder implements EntryPoint {
 	private HorizontalPanel patientHolder = new HorizontalPanel();
 	private HorizontalPanel packageHolder = new HorizontalPanel();
 	private VerticalPanel individualPanel = new VerticalPanel();	
-	
 	
 	private Button addPatient = new Button("Add");
 	private Button removePatient = new Button("Remove");
