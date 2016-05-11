@@ -108,8 +108,6 @@ public class MedReminder implements EntryPoint {
 		//initPackageHolder();
 		setMainStyles();
 
-
-
 		Command issueLogout = new Command() {
 
 			@Override
@@ -124,7 +122,6 @@ public class MedReminder implements EntryPoint {
 				RootPanel.get("mainPanel").remove(packageHolder);
 				RootPanel.get("mainPanel").add(patientHolder);
 			}
-
 		};
 		Command issueTemplatesCommand = new Command() {
 			@Override
@@ -132,13 +129,12 @@ public class MedReminder implements EntryPoint {
 				RootPanel.get("mainPanel").remove(patientHolder);
 				RootPanel.get("mainPanel").add(packageHolder);				
 			}
-
 		};
 		
 		bar.addItem("Patients",issuePatientsCommand);
 		bar.addItem("Packages",issueTemplatesCommand);
 		bar.addItem("Logout", issueLogout);
-
+		
 		// main screen
 		final Button sendButton = new Button("Send");
 		final Button loginButton = new Button("Login");
@@ -220,7 +216,7 @@ public class MedReminder implements EntryPoint {
 					// RootPanel.get("sendButtonContainer").clear();
 					RootPanel.get("loginButtonContainer").clear();
 					RootPanel.get("errorLabelContainer").clear();
-					RootPanel.get().clear();
+					//RootPanel.get().clear();
 					loginBox.clear();
 					loginBox.hide();
 					patientHolder.initUI();
