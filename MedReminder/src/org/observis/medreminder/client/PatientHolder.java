@@ -148,6 +148,7 @@ public class PatientHolder extends HorizontalPanel{
 						deliveriesTitle.add(d.date+ " "+d.time);
 					}
 					TextCell deliveryCell = new TextCell();
+					//deliveryCell.
 					CellList<String> deliveriesCellList = new CellList<String>(deliveryCell);
 					// cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
@@ -526,7 +527,6 @@ public class PatientHolder extends HorizontalPanel{
 		TextCell patientsCell = new TextCell();
 		CellList<String> cellList = new CellList<String>(patientsCell);
 		// cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		cellList.setStyleName("cellList");
 		
 		final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 		cellList.setSelectionModel(selectionModel);
