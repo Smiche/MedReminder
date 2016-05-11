@@ -32,5 +32,10 @@
   	<version>1.4</version>
   	<type>maven-plugin</type>
   </dependency>
+  <dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-simple</artifactId>
+	<version>1.6.2</version>
+</dependency>  
   </dependencies>
 </project>
