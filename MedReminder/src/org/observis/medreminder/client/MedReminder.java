@@ -281,7 +281,7 @@ public class MedReminder implements EntryPoint {
 							RootPanel.get("nameFieldContainer").clear();
 							RootPanel.get("passFieldContainer").clear();
 							RootPanel.get("loginButtonContainer").clear();
-							RootPanel.get().add(bar);
+							RootPanel.get("menuBar").add(bar);
 							patientHolder.loadPatients();
 							loggedIn = true;
 						} else {
