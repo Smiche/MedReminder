@@ -15,9 +15,8 @@
   <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <inherits name='com.google.gwt.user.theme.dark.Dark'/>
-
   <!-- Other module inherits                                      -->
-
+  <stylesheet src='../MedReminder.css' />
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.observis.medreminder.client.MedReminder'/>
 
