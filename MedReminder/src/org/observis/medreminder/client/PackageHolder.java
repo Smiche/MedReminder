@@ -89,7 +89,7 @@ public class PackageHolder extends HorizontalPanel{
 			
 		});
 		
-		
+		this.initPackageHolder();
 	}
 	
 	private void addPackagePopup(){
